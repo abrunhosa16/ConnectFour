@@ -1,6 +1,6 @@
-from game.board import *
-from game.connectFour import *
-from algoritmos.PvsP import * 
+from board import Board
+from connectFour import *
+from PvsP import * 
 
 board = Board()
 

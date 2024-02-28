@@ -1,4 +1,7 @@
 import random
+from board import Board
+
+tabuleiro = Board()
 
 def inputPlayer(letter):
     # define qual letra para cada jogador retorna [X, O] or [O, X]
@@ -19,7 +22,7 @@ def askForFirstPlayer():
             m = random.randint(0, 1)
             return "X" if m == 0 else "O"
 
-def testMoveValidity(board, col):
+def testMoveValidity(board: Board, col) -> int | bool:
     # testa se a jogada é válida se a casa esta vazia e qual a posição esta vazia
     # retorna a posição que esta vazia ou false
     for i in range(6):
@@ -27,7 +30,7 @@ def testMoveValidity(board, col):
             return 5 - i
     return False
 
-def testMove(board, col):
+def testMove(board: Board, col) -> bool | int:
 
     if col > 6 or col < 0:
         print("Fora das margens")
@@ -41,7 +44,7 @@ def testMove(board, col):
 
     return position
 
-def move(board, turn, col, line):
+def move(board: Board, turn, col, line) -> None:
     board.setPos(col, line, turn)
 
 def askForNextMove(board, turn):
@@ -58,7 +61,7 @@ def askForNextMove(board, turn):
         else:
             return (turn, move_col, move)
 
-def winner(board):
+def winner(board: Board):
 
     for row in range(6):
 
@@ -90,11 +93,13 @@ def winner(board):
                     return board.getPos(row, col)
     return False
 
-def availableMove(board):
+def possibleMoves(board: Board):
     # retorna uma lista com movimentos possiveis para a IA
     acc = []
     for i in range(7):
         position = testMoveValidity(board, i)
-        if isinstance(position, int):
+        if position != False:
             acc.append((i, position))
     return acc
+
+

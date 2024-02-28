@@ -10,10 +10,14 @@ class Board:
         
     def __str__(self):
         string = ''
+        for i in range(7):
+            string+= ''.join(str(i) + " ") 
+        string+= '\n'
+        
         for row in self.board:
-            string += ''.join(row) + '\n'
+            string += ' '.join(row) + '\n'
         return string
-    
+        
     def getPos(self, row, col):
             return self.board[row][col]
     
@@ -27,7 +31,7 @@ class Board:
             colCopy = []
             for col in range(7):
                 boardCopy.setPos(row, col, self.getPos(row, col))
-            boardCopy.append(colCopy)
+            boardCopy.board.append(colCopy)
         return boardCopy
     
     def getRow(self, row):
