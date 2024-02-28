@@ -2,15 +2,15 @@ from game.board import *
 from game.connectFour import *
 from algoritmos.PvsP import * 
 
+board = Board()
 
 def main():
-    board = generateBoard()
     start_p = askForFirstPlayer()
 
-    if start_p == 'w':
-        sec_p = 'b'
+    if start_p == 'X':
+        sec_p = 'O'
     else:
-        sec_p = 'w'
+        sec_p = 'O'
 
     game = int(input("Qual algoritmo queres? 1 - P vs P, 2 - A*, 3 - MC : "))
     if game == 1:
