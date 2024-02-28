@@ -1,29 +1,29 @@
 import random
 
 def inputPlayer(letter):
-    # define qual letra para cada jogador retorna [w, b] or [b, w]
-    if letter == 'w':
-        return ['w', 'b']
+    # define qual letra para cada jogador retorna [X, O] or [O, X]
+    if letter == 'X':
+        return ['X', 'O']
     else:
-        return ['b', 'w']
+        return ['O', 'X']
 
 def askForFirstPlayer():
     #perguntar ao jogador quem é que deve jogar primeiro, as opções
     #podem ser por exemplo "white", "black" ou "random" e retorna o valor relacionado
     valid = False
     while not valid:
-        piece = input("Queres ser w, b or r? ")
-        if piece == "w" or piece == "b":
-            return piece
-        elif piece == "r":
+        piece = input("Queres ser X, O or R? ")
+        if piece.upper() == "X" or piece.upper() == "O":
+            return piece.upper()
+        elif piece.upper() == "R":
             m = random.randint(0, 1)
-            return "w" if m == 0 else "b"
+            return "X" if m == 0 else "O"
 
 def testMoveValidity(board, col):
     # testa se a jogada é válida se a casa esta vazia e qual a posição esta vazia
     # retorna a posição que esta vazia ou false
     for i in range(6):
-        if board[5 - i][col] == "-":
+        if board.getPos(5-i, col) == "-":
             return 5 - i
     return False
 
@@ -42,7 +42,7 @@ def testMove(board, col):
     return position
 
 def move(board, turn, col, line):
-    board[line][col] = turn
+    board.setPos(col, line, turn)
 
 def askForNextMove(board, turn):
     while True:
@@ -61,31 +61,36 @@ def askForNextMove(board, turn):
 def winner(board):
 
     for row in range(6):
-        for col in range(7):
 
+        #empate
+        if (row == 0):
+            line = board.getRow(row)
+            if (line == ['w'] * 7 or line == ['b'] * 7): return 'Tie'
+
+        for col in range(7):
+            
             #horizontal
             if col <= 3:
-                if (board[row][col] == board[row][col + 1] == board[row][col + 2] == board[row][col + 3] and board[row][col] != '-'):
-                    return board[row][col]
+                if (board.getPos(row, col) == board.getPos(row, col + 1) == board.getPos(row, col + 2) == board.getPos(row, col + 3) and board.getPos(row, col) != '-'):
+                    return board.getPos(row, col)
 
             #vertical
             if row <= 2:
-                if (board[row][col] == board[row + 1][col] == board[row + 2][col] == board[row + 3][col] and board[row][col] != '-'):
-                    return board[row][col]
+                if (board.getPos(row, col) == board.getPos(row + 1, col) == board.getPos(row + 2, col) == board.getPos(row + 3, col) and board.getPos(row, col) != '-'):
+                    return board.getPos(row, col)
 
             #diagonal
             if (col <= 3 and row <= 2):
-                if (board[row][col] == board[row + 1][col + 1] == board[row + 2][col + 2] == board[row + 3][col + 3] and board[row][col] != '-'):
-                    return board[row][col]
+                if (board.getPos(row, col) == board.getPos(row + 1, col + 1) == board.getPos(row + 2, col + 2) == board.getPos(row + 3, col + 3) and board.getPos(row, col) != '-'):
+                    return board.getPos(row, col)
 
             #diagonal
             if (col <= 3 and row >= 3):
-                if (board[row][col] == board[row - 1][col + 1] == board[row - 2][col + 2] == board[row - 3][col + 3] and board[row][col] != '-'):
-                    return board[row][col]
-
+                if (board.getPos(row, col) == board.getPos(row - 1, col + 1) == board.getPos(row - 2, col + 2) == board.getPos(row - 3, col + 3) and board.getPos(row, col) != '-'):
+                    return board.getPos(row, col)
     return False
 
-def availableMoveAi(board):
+def availableMove(board):
     # retorna uma lista com movimentos possiveis para a IA
     acc = []
     for i in range(7):

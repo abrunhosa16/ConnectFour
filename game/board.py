@@ -1,27 +1,34 @@
-def generateBoard():
-    board = []
-    for i in range(6):
-        vetor = []
-        for j in range(7):
-            vetor.append('-')
-        board.append(vetor)
-    return board
+class Board:
+    def __init__(self):
+        self.board = []
 
-def printBoard(board):
-    for k in range(7):
-        print(k, end=" ")
-    print("\n")
-    for i in range(len(board)):
-        for j in range(len(board[0])):
-            print(board[i][j], end=" ")
-        print("\n")
+        for i in range(6):
+            vetor = []
+            for j in range(7):
+                vetor.append('-')
+            self.board.append(vetor)
+        
+    def __str__(self):
+        string = ''
+        for row in self.board:
+            string += ''.join(row) + '\n'
+        return string
+    
+    def getPos(self, row, col):
+            return self.board[row][col]
+    
+    def setPos(self, col, row, player):
+        self.board[row][col] = player
 
-def boardCopy(board):
-    # se faz uma copia do tabuleiro no estado atual
-    boardCopy = []
-    for row in board:
-        colCopy = []
-        for col in row:
-            colCopy.append(col)
-        boardCopy.append(colCopy)
-    return boardCopy
+    def boardCopy(self):
+        # se faz uma copia do tabuleiro no estado atual
+        boardCopy = Board()
+        for row in range(6):
+            colCopy = []
+            for col in range(7):
+                boardCopy.setPos(row, col, self.getPos(row, col))
+            boardCopy.append(colCopy)
+        return boardCopy
+    
+    def getRow(self, row):
+        return self.board[row]
