@@ -99,7 +99,9 @@ def possibleMoves(board: Board):
     for i in range(7):
         position = testMoveValidity(board, i)
         if position != False:
-            acc.append((i, position))
+            acc.append((position, i))
     return acc
 
-
+def gamePerson(board: Board, player):
+    turn, col, line = askForNextMove(board, player)
+    move(board, turn, col, line)

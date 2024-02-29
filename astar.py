@@ -40,35 +40,86 @@ def getPoints(board):
 
     return points
 
-#???
-#falta colocar a logica de poder escolher qual a peça quero ser
-def Astar(node : Board, turn):
+def Astar(node : Board, ai):
     moves = possibleMoves(node)
     points = getPoints(node)
     best_move = [node, points]
     for move in moves:
         copy = node.boardCopy()
-        copy.setPos(move[1], move[0], turn)
+        copy.setPos(move[0], move[1], ai)
         copy_points = getPoints(copy)
 
-        if turn == 'X':
+        if ai == 'X':
             if copy_points == 512:
-                return[copy, copy_points]
+                return copy
             if copy_points > best_move[1]:
                 best_move = [copy, copy_points]
         else:
             if copy_points == -512:
-                return[copy, copy_points]
+                return copy
             if copy_points < best_move[1]:
                 best_move = [copy, copy_points]
 
-    return best_move
+    return best_move[0]
 
-tab1= Board()
-tab1.setPos(5,0,'X')
-tab1.setPos(5,1,'X')
-tab1.setPos(5,2,'X')
-tab1.setPos(5,5,'O')
-tab1.setPos(4,5,'O')
-new = Astar(tab1, 'O')
-print(new[0], new[1])
+def gameAstar(board: Board, player, first_p):
+
+    if player == 'X':
+        ai = 'O'
+    else: ai = 'X'
+
+    while True:
+        print(board)
+
+        #checks if there is winner
+        win = winner(board)
+        if not isinstance(win, bool):
+            print(board)
+            print('Winner is ' + win)
+            return win
+        
+        if first_p == player:
+            print('Your Turn')
+            gamePerson(board, player)
+
+            print(board)
+
+            #checks if there is winner
+            win = winner(board)
+            if not isinstance(win, bool):
+                if win == 'Tie': 
+                    print(win)
+                print(board)
+                print('Winner is ' + win)
+                return win
+
+            print('AI')
+            board = Astar(board, ai)
+        
+        else:
+            print('AI')
+            board = Astar(board, ai)
+
+            print(board)
+
+            #checks if there is winner
+            win = winner(board)
+            if not isinstance(win, bool):
+                if win == 'Tie': 
+                    print(win)
+                print(board)
+                print('Winner is ' + win)
+                return win
+            
+            print('Your Turn')
+            gamePerson(board, player)
+
+# b = Board()
+# # b.setPos(5,0,'X')
+# # b.setPos(4,0,'X')
+# # b.setPos(3,0,'X')
+# b.setPos(5,2,'O')
+# b.setPos(5,3,'O')
+# b.setPos(5,4,'O')
+# print(b)
+# print(getPoints(b))
