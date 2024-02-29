@@ -1,74 +1,148 @@
 from connectFour import *
 from board import *
 
-def getLinePoints(line) -> int:
+def getLinePoints(line, player) -> int:
+    opponent = 'X' if player == 'O' else 'O'
     if (line.count('X') != 0 and line.count('O') != 0): return 0
-    if (line.count('X') == 3 and line.count('O') == 0): return 50
+    if (line.count('X') == 3 and line.count('O') == 0): 
+        if 'X' == opponent: return 200
+        else: return 50
     if (line.count('X') == 2 and line.count('O') == 0): return 10
     if (line.count('X') == 1 and line.count('O') == 0): return 1
-    if (line.count('X') == 0 and line.count('O') == 3): return -50
+    if (line.count('X') == 0 and line.count('O') == 3):
+        if 'O' == opponent: return -200
+        else: return -50
     if (line.count('X') == 0 and line.count('O') == 2): return -10
     if (line.count('X') == 0 and line.count('O') == 1): return -1
     return 0
 
-def getPoints(board):
+def getPoints(board, player):
     win = winner(board)
     if win == 'X': return 512
     if win == 'O': return -512
 
-    points = 0
+    points = 16 if player == 'X' else -16
 
     #horizontal
     for row in range(6):
         for col in range(4):
-            points += getLinePoints( [board.getPos(row, col + i) for i in range(4)])
+            points += getLinePoints( [board.getPos(row, col + i) for i in range(4)], player)
 
     #vertical
     for col in range(7):
         for row in range(3):
-            points += getLinePoints( [board.getPos(row + i, col) for i in range(4)])
+            points += getLinePoints( [board.getPos(row + i, col) for i in range(4)], player)
 
     #diagonal e-d c-b
     for row in range(3):
         for col in range(4):
-            points += getLinePoints( [board.getPos(row + i, col + i) for i in range(4)])
+            points += getLinePoints( [board.getPos(row + i, col + i) for i in range(4)], player)
 
     #diagonal e-d b-c
     for row in range(3,6,1):
         for col in range(4):
-            points += getLinePoints( [board.getPos(row - i, col + i) for i in range(4)])
+            points += getLinePoints( [board.getPos(row - i, col + i) for i in range(4)], player)
 
     return points
 
-#???
-#falta colocar a logica de poder escolher qual a peça quero ser
-def Astar(node : Board, turn):
+# def predictNextMove(board: Board, ai):
+#     player = 'X' if ai == 'O' else 'O'
+#     moves = possibleMoves(board)
+#     points = getPoints(board, player)
+#     best_move = [board, points]
+#     for move in moves:
+#         copy = board.boardCopy()
+#         copy.setPos(move[0], move[1], ai)
+#         copy_points = getPoints(copy, ai)
+
+#         if player == 'X':
+#             if copy_points == 512:
+#                 return 100
+#         else:
+#             if copy_points == -512:
+#                 return -100
+#     return 0
+
+def Astar(node : Board, ai):
     moves = possibleMoves(node)
-    points = getPoints(node)
+    points = getPoints(node, ai)
     best_move = [node, points]
     for move in moves:
         copy = node.boardCopy()
-        copy.setPos(move[1], move[0], turn)
-        copy_points = getPoints(copy)
-
-        if turn == 'X':
+        copy.setPos(move[0], move[1], ai)
+        copy_points = getPoints(copy, ai)
+        # copy_points += predictNextMove(copy, ai)
+        if ai == 'X':
             if copy_points == 512:
-                return[copy, copy_points]
+                return copy
             if copy_points > best_move[1]:
                 best_move = [copy, copy_points]
         else:
             if copy_points == -512:
-                return[copy, copy_points]
+                return copy
             if copy_points < best_move[1]:
                 best_move = [copy, copy_points]
 
-    return best_move
+    return best_move[0]
 
-tab1= Board()
-tab1.setPos(5,0,'X')
-tab1.setPos(5,1,'X')
-tab1.setPos(5,2,'X')
-tab1.setPos(5,5,'O')
-tab1.setPos(4,5,'O')
-new = Astar(tab1, 'O')
-print(new[0], new[1])
+def gameAstar(board: Board, player, first_p):
+
+    if player == 'X':
+        ai = 'O'
+    else: ai = 'X'
+
+    while True:
+        print(board)
+
+        #checks if there is winner
+        win = winner(board)
+        if not isinstance(win, bool):
+            print(board)
+            print('Winner is ' + win)
+            return win
+        
+        if first_p == player:
+            print('Your Turn')
+            gamePerson(board, player)
+
+            print(board)
+
+            #checks if there is winner
+            win = winner(board)
+            if not isinstance(win, bool):
+                if win == 'Tie': 
+                    print(win)
+                print(board)
+                print('Winner is ' + win)
+                return win
+
+            print('AI')
+            board = Astar(board, ai)
+        
+        else:
+            print('AI')
+            board = Astar(board, ai)
+
+            print(board)
+
+            #checks if there is winner
+            win = winner(board)
+            if not isinstance(win, bool):
+                if win == 'Tie': 
+                    print(win)
+                print(board)
+                print('Winner is ' + win)
+                return win
+            
+            print('Your Turn')
+            gamePerson(board, player)
+
+# b = Board()
+# # b.setPos(5,0,'X')
+# # b.setPos(4,0,'X')
+# # b.setPos(3,0,'X')
+# b.setPos(5,2,'O')
+# b.setPos(5,3,'O')
+# b.setPos(5,4,'O')
+# print(b)
+# print(getPoints(b))
