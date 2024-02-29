@@ -45,7 +45,7 @@ def testMove(board: Board, col) -> bool | int:
     return position
 
 def move(board: Board, turn, col, line) -> None:
-    board.setPos(col, line, turn)
+    board.setPos(line, col, turn)
 
 def askForNextMove(board, turn):
     while True:

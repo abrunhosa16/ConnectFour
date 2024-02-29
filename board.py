@@ -21,7 +21,7 @@ class Board:
     def getPos(self, row, col):
             return self.board[row][col]
     
-    def setPos(self, col, row, player):
+    def setPos(self, row, col, player):
         self.board[row][col] = player
 
     def boardCopy(self):
