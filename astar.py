@@ -45,24 +45,6 @@ def getPoints(board, player):
 
     return points
 
-# def predictNextMove(board: Board, ai):
-#     player = 'X' if ai == 'O' else 'O'
-#     moves = possibleMoves(board)
-#     points = getPoints(board, player)
-#     best_move = [board, points]
-#     for move in moves:
-#         copy = board.boardCopy()
-#         copy.setPos(move[0], move[1], ai)
-#         copy_points = getPoints(copy, ai)
-
-#         if player == 'X':
-#             if copy_points == 512:
-#                 return 100
-#         else:
-#             if copy_points == -512:
-#                 return -100
-#     return 0
-
 def Astar(node : Board, ai):
     moves = possibleMoves(node)
     points = getPoints(node, ai)
@@ -71,7 +53,6 @@ def Astar(node : Board, ai):
         copy = node.boardCopy()
         copy.setPos(move[0], move[1], ai)
         copy_points = getPoints(copy, ai)
-        # copy_points += predictNextMove(copy, ai)
         if ai == 'X':
             if copy_points == 512:
                 return copy
