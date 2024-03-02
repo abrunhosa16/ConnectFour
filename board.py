@@ -14,12 +14,15 @@ class Board:
             string += ''.join(str(i) + " ") 
         string+= '\n'
         
-        for row in range(6):
-            if row != 5:    
-                string += ' '.join(self.board[row]) + '\n'
-            else: string += ' '.join(self.board[row])
+        for row in range(6):  
+            string += ' '.join(self.board[row]) + '\n'
         return string
         
+    def resetBoard(self):
+        for row in range(6):
+            for col in range(7):
+                self.board[row][col] = '-'
+
     def getPos(self, row, col):
             return self.board[row][col]
     
