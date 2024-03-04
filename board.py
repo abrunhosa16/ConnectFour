@@ -18,6 +18,15 @@ class Board:
             string += ' '.join(self.board[row]) + '\n'
         return string
         
+    def getRow(self, row):
+        return self.board[row]
+    
+    def __eq__(self, other):
+        for row in range(6):
+            if self.board[row] != other.getRow(row):
+                return False
+        return True
+    
     def resetBoard(self):
         for row in range(6):
             for col in range(7):
@@ -38,6 +47,3 @@ class Board:
                 boardCopy.setPos(row, col, self.getPos(row, col))
             boardCopy.board.append(colCopy)
         return boardCopy
-    
-    def getRow(self, row):
-        return self.board[row]
