@@ -1,18 +1,23 @@
 from connectFour import *
 from board import *
+import time
 
 def getLinePoints(line, player) -> int:
     opponent = 'X' if player == 'O' else 'O'
     if (line.count('X') != 0 and line.count('O') != 0): return 0
     if (line.count('X') == 3 and line.count('O') == 0): 
-        if 'X' == opponent: return 200
+        if 'X' == opponent: return 50
         else: return 50
-    if (line.count('X') == 2 and line.count('O') == 0): return 10
+    if (line.count('X') == 2 and line.count('O') == 0):
+        if 'X' == opponent: return 10
+        else: return 10
     if (line.count('X') == 1 and line.count('O') == 0): return 1
     if (line.count('X') == 0 and line.count('O') == 3):
-        if 'O' == opponent: return -200
+        if 'O' == opponent: return -50
         else: return -50
-    if (line.count('X') == 0 and line.count('O') == 2): return -10
+    if (line.count('X') == 0 and line.count('O') == 2):
+        if 'O' == opponent: return -10
+        else: return -10
     if (line.count('X') == 0 and line.count('O') == 1): return -1
     return 0
 
@@ -80,8 +85,11 @@ def gameAstar(board: Board, person):
             return win
         
         print('Tua vez.')
-        gamePerson(board, order[0])
+        board, col = Astar(board, order[0])
+
         print(board)
+        time.sleep(2)
+
 
         #checks if there is winner
         win = winner(board)

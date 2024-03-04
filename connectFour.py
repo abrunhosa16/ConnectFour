@@ -51,7 +51,7 @@ def testMoveValidity(board: Board, col) -> int | bool:
     for i in range(6):
         if board.getPos(5-i, col) == "-":
             return 5 - i
-    return False
+    return -1
 
 def testMove(board: Board, col) -> bool | int:
 
@@ -61,7 +61,7 @@ def testMove(board: Board, col) -> bool | int:
 
     position = testMoveValidity(board, col)
 
-    if not isinstance(position, int):
+    if position < 0:
         print("Coluna não disponível")
         return False
 
@@ -114,64 +114,64 @@ def winner(board: Board):
                 if (line.count('-') == 0): return 'Tie'
     return False
 
-def right(board: Board, position, turn: str) -> int:
-    row, col = position[0], position[1]
-    acc = 0
-    for i in range(6 - col):
-        if board.getPos(row, col + i + 1) != turn:
-            return acc
-        else:
-            acc += 1
-    return acc
+# def right(board: Board, position, turn: str) -> int:
+#     row, col = position[0], position[1]
+#     acc = 0
+#     for i in range(6 - col):
+#         if board.getPos(row, col + i + 1) != turn:
+#             return acc
+#         else:
+#             acc += 1
+#     return acc
 
-def left(board: Board, position, turn: str) -> int:
-    row, col = position[0], position[1]
-    acc = 0
-    for i in range(col):
-        print(board.getPos(row, col - i - 1))
-        if board.getPos(row, col - i - 1 ) != turn:
-            return acc
-        else:
-            acc += 1
-    return acc
+# def left(board: Board, position, turn: str) -> int:
+#     row, col = position[0], position[1]
+#     acc = 0
+#     for i in range(col):
+#         print(board.getPos(row, col - i - 1))
+#         if board.getPos(row, col - i - 1 ) != turn:
+#             return acc
+#         else:
+#             acc += 1
+#     return acc
 
-def up(board: Board, position, turn: str) -> int:
-    row, col = position[0], position[1]
-    acc = 0
-    for i in range(row):
-        if board.getPos(row - i - 1, col) != turn:
-            return acc
-        else:
-            acc += 1
-    return acc
+# def up(board: Board, position, turn: str) -> int:
+#     row, col = position[0], position[1]
+#     acc = 0
+#     for i in range(row):
+#         if board.getPos(row - i - 1, col) != turn:
+#             return acc
+#         else:
+#             acc += 1
+#     return acc
 
-def down(board: Board, position, turn: str) -> int:
-    row, col = position[0], position[1]
-    acc = 0
-    for i in range(5 - row):
-        if board.getPos(row + i + 1, col) != turn:
-            return acc
-        else:
-            acc += 1
-    return acc
+# def down(board: Board, position, turn: str) -> int:
+#     row, col = position[0], position[1]
+#     acc = 0
+#     for i in range(5 - row):
+#         if board.getPos(row + i + 1, col) != turn:
+#             return acc
+#         else:
+#             acc += 1
+#     return acc
 
-def winner2(board: Board, position, turn):
-    if up(board, position, turn) + down(board, position, turn) >= 4:
-        return True
-    elif right(board, position, turn) + left(board, position, turn) >= 4:
-        return True
+# def winner2(board: Board, position, turn):
+#     if up(board, position, turn) + down(board, position, turn) >= 4:
+#         return True
+#     elif right(board, position, turn) + left(board, position, turn) >= 4:
+#         return True
     
 
 
           
-tab2 = Board()
-tab2.setPos(5,0,'X')
-tab2.setPos(5,1,'X')
-tab2.setPos(5,2,'X')
-tab2.setPos(5,5,'O')
-tab2.setPos(4,5,'O')
-print(tab2)
-print(left(tab2, [5, 0], 'X'))
+# tab2 = Board()
+# tab2.setPos(5,0,'X')
+# tab2.setPos(5,1,'X')
+# tab2.setPos(5,2,'X')
+# tab2.setPos(5,5,'O')
+# tab2.setPos(4,5,'O')
+# print(tab2)
+# print(left(tab2, [5, 0], 'X'))
 
 
 
@@ -181,7 +181,7 @@ def possibleMoves(board: Board):
     acc = []
     for i in range(7):
         position = testMoveValidity(board, i)
-        if position != False:
+        if position != -1:
             acc.append((position, i))
     return acc
 
