@@ -11,13 +11,18 @@ class Board:
     def __str__(self):
         string = ''
         for i in range(7):
-            string+= ''.join(str(i) + " ") 
+            string += ''.join(str(i) + " ") 
         string+= '\n'
         
-        for row in self.board:
-            string += ' '.join(row) + '\n'
+        for row in range(6):  
+            string += ' '.join(self.board[row]) + '\n'
         return string
         
+    def resetBoard(self):
+        for row in range(6):
+            for col in range(7):
+                self.board[row][col] = '-'
+
     def getPos(self, row, col):
             return self.board[row][col]
     

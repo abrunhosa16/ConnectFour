@@ -22,6 +22,29 @@ def askForFirstPlayer():
             m = random.randint(0, 1)
             return "X" if m == 0 else "O"
 
+def askForAlgorithm():
+    while True:
+        try:
+            algorithm = int(input("Qual algoritmo queres? 1 - P vs P, 2 - A*, 3 - MC : "))
+        except ValueError:
+            print("Tente inteiros. \n")
+            continue
+
+        if algorithm in range(1, 4, 1):
+            return algorithm
+        else:
+            print('Tente um número de 1 a 3. \n')
+        
+def playAgain():
+    while True:
+        play = input(("Queres jogar de novo? S ou N. : "))
+        if play.upper() == 'S':
+            return True
+        elif play.upper() == 'N':
+            return False
+        else:
+            print('Tente S ou N. \n')
+
 def testMoveValidity(board: Board, col) -> int | bool:
     # testa se a jogada é válida se a casa esta vazia e qual a posição esta vazia
     # retorna a posição que esta vazia ou false
@@ -158,11 +181,10 @@ def possibleMoves(board: Board):
     acc = []
     for i in range(7):
         position = testMoveValidity(board, i)
-        if type(position) is int:
-            print(position)
-
+        if position != False:
             acc.append((position, i))
     return acc
 
-
-
+def gamePerson(board: Board, player):
+    turn, col, line = askForNextMove(board, player)
+    move(board, turn, col, line)
