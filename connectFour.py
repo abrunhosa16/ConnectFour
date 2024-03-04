@@ -51,7 +51,7 @@ def testMoveValidity(board: Board, col) -> int | bool:
     for i in range(6):
         if board.getPos(5-i, col) == "-":
             return 5 - i
-    return False
+    return -1
 
 def testMove(board: Board, col) -> bool | int:
 
@@ -61,7 +61,7 @@ def testMove(board: Board, col) -> bool | int:
 
     position = testMoveValidity(board, col)
 
-    if not isinstance(position, int):
+    if position == -1:
         print("Coluna não disponível")
         return False
 
@@ -164,14 +164,14 @@ def winner2(board: Board, position, turn):
 
 
           
-tab2 = Board()
-tab2.setPos(5,0,'X')
-tab2.setPos(5,1,'X')
-tab2.setPos(5,2,'X')
-tab2.setPos(5,5,'O')
-tab2.setPos(4,5,'O')
-print(tab2)
-print(left(tab2, [5, 0], 'X'))
+# tab2 = Board()
+# tab2.setPos(5,0,'X')
+# tab2.setPos(5,1,'X')
+# tab2.setPos(5,2,'X')
+# tab2.setPos(5,5,'O')
+# tab2.setPos(4,5,'O')
+# print(tab2)
+# print(left(tab2, [5, 0], 'X'))
 
 
 
@@ -181,7 +181,7 @@ def possibleMoves(board: Board):
     acc = []
     for i in range(7):
         position = testMoveValidity(board, i)
-        if position != False:
+        if position != -1:
             acc.append((position, i))
     return acc
 

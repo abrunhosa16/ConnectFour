@@ -12,17 +12,10 @@ def main():
         board.resetBoard()
         start_p = askForFirstPlayer()
 
-<<<<<<< HEAD
-    if start_p == 'X':
-        sec_p = 'O'
-    else:
-        sec_p = 'X'
-=======
         if start_p == 'X':
             sec_p = 'O'
         else:
             sec_p = 'O'
->>>>>>> 1f5e7db5765bbf963c2321cee26de85f182fe59c
 
         game = askForAlgorithm()
         if game == 1:
