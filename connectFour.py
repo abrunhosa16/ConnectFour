@@ -61,7 +61,7 @@ def testMove(board: Board, col) -> bool | int:
 
     position = testMoveValidity(board, col)
 
-    if position < 0:
+    if position == -1:
         print("Coluna não disponível")
         return False
 

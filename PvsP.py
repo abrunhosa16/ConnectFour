@@ -19,6 +19,7 @@ def gamePvsP(board,start_p, sec_p):
 
         print("First Player")
         gamePerson(board, start_p)
+        
         print(board)
 
         #checks if there is winner

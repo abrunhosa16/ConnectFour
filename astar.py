@@ -6,17 +6,17 @@ def getLinePoints(line, player) -> int:
     opponent = 'X' if player == 'O' else 'O'
     if (line.count('X') != 0 and line.count('O') != 0): return 0
     if (line.count('X') == 3 and line.count('O') == 0): 
-        if 'X' == opponent: return 50
+        if 'X' == opponent: return 250
         else: return 50
-    if (line.count('X') == 2 and line.count('O') == 0):
-        if 'X' == opponent: return 10
+    if (line.count('X') == 2 and line.count('O') == 0): 
+        if 'X' == opponent: return 50
         else: return 10
     if (line.count('X') == 1 and line.count('O') == 0): return 1
     if (line.count('X') == 0 and line.count('O') == 3):
-        if 'O' == opponent: return -50
+        if 'O' == opponent: return -250
         else: return -50
     if (line.count('X') == 0 and line.count('O') == 2):
-        if 'O' == opponent: return -10
+        if 'O' == opponent: return -50
         else: return -10
     if (line.count('X') == 0 and line.count('O') == 1): return -1
     return 0
@@ -28,22 +28,22 @@ def getPoints(board, player):
 
     points = 16 if player == 'X' else -16
 
-    #horizontal
+    #horizontal ALL POSSIBLE LINES CHECKED
     for row in range(6):
         for col in range(4):
             points += getLinePoints( [board.getPos(row, col + i) for i in range(4)], player)
 
-    #vertical
+    #vertical ALL POSSIBLE LINES CHECKED
     for col in range(7):
         for row in range(3):
             points += getLinePoints( [board.getPos(row + i, col) for i in range(4)], player)
 
-    #diagonal e-d c-b
+    #diagonal e-d c-b ALL POSSIBLE LINES CHECKED
     for row in range(3):
         for col in range(4):
             points += getLinePoints( [board.getPos(row + i, col + i) for i in range(4)], player)
 
-    #diagonal e-d b-c
+    #diagonal e-d b-c ALL POSSIBLE LINES CHECKED
     for row in range(3,6,1):
         for col in range(4):
             points += getLinePoints( [board.getPos(row - i, col + i) for i in range(4)], player)
@@ -53,7 +53,7 @@ def getPoints(board, player):
 def Astar(node : Board, ai):
     moves = possibleMoves(node)
     points = getPoints(node, ai)
-    best_move = [node, points]
+    best_move = [node, points, 0]
     for move in moves:
         copy = node.boardCopy()
         copy.setPos(move[0], move[1], ai)
@@ -68,7 +68,10 @@ def Astar(node : Board, ai):
                 return [copy, move[1]]
             if copy_points < best_move[1]:
                 best_move = [copy, copy_points, move[1]]
-
+                
+    if node == best_move[0]:
+        print('IGUALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+        
     return [best_move[0], best_move[2]]
 
 def gameAstar(board: Board, person):
@@ -103,11 +106,24 @@ def gameAstar(board: Board, person):
         print('A AI pôs uma peça na coluna ' + str(col) + '.')
 
 # b = Board()
-# # b.setPos(5,0,'X')
-# # b.setPos(4,0,'X')
-# # b.setPos(3,0,'X')
-# b.setPos(5,2,'O')
-# b.setPos(5,3,'O')
+# b.setPos(5,0,'X')
+# b.setPos(5,2,'X')
+# b.setPos(5,3,'X')
+# b.setPos(3,2,'X')
+# b.setPos(3,3,'X')
+# b.setPos(1,2,'X')
+# b.setPos(1,3,'X')
 # b.setPos(5,4,'O')
+# b.setPos(4,3,'O')
+# b.setPos(4,2,'O')
+# b.setPos(2,3,'O')
+# b.setPos(2,2,'O')
+# b.setPos(0,3,'O')
 # print(b)
-# print(getPoints(b))
+# print(getPoints(b,'O'))
+# b.setPos(5,1,'O')
+# print(b)
+# print(getPoints(b,'O'))
+# b.setPos(5,1,'-')
+# b.setPos(4,4,'O')
+# print(b)
