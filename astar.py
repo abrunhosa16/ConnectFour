@@ -48,7 +48,7 @@ def Astar(node : Board, turn):
     best_move = [node, points]
     for move in moves:
         copy = node.boardCopy()
-        copy.setPos(move[1], move[0], turn)
+        copy.setPos(move[0], move[1], turn)
         copy_points = getPoints(copy)
 
         if turn == 'X':

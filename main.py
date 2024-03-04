@@ -10,7 +10,7 @@ def main():
     if start_p == 'X':
         sec_p = 'O'
     else:
-        sec_p = 'O'
+        sec_p = 'X'
 
     game = int(input("Qual algoritmo queres? 1 - P vs P, 2 - A*, 3 - MC : "))
     if game == 1:

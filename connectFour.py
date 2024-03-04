@@ -64,12 +64,6 @@ def askForNextMove(board, turn):
 def winner(board: Board):
 
     for row in range(6):
-
-        #empate
-        if (row == 0):
-            line = board.getRow(row)
-            if (line == ['w'] * 7 or line == ['b'] * 7): return 'Tie'
-
         for col in range(7):
             
             #horizontal
@@ -91,15 +85,84 @@ def winner(board: Board):
             if (col <= 3 and row >= 3):
                 if (board.getPos(row, col) == board.getPos(row - 1, col + 1) == board.getPos(row - 2, col + 2) == board.getPos(row - 3, col + 3) and board.getPos(row, col) != '-'):
                     return board.getPos(row, col)
+                
+            if (row == 0):
+                line = board.getRow(row)
+                if (line.count('-') == 0): return 'Tie'
     return False
+
+def right(board: Board, position, turn: str) -> int:
+    row, col = position[0], position[1]
+    acc = 0
+    for i in range(6 - col):
+        if board.getPos(row, col + i + 1) != turn:
+            return acc
+        else:
+            acc += 1
+    return acc
+
+def left(board: Board, position, turn: str) -> int:
+    row, col = position[0], position[1]
+    acc = 0
+    for i in range(col):
+        print(board.getPos(row, col - i - 1))
+        if board.getPos(row, col - i - 1 ) != turn:
+            return acc
+        else:
+            acc += 1
+    return acc
+
+def up(board: Board, position, turn: str) -> int:
+    row, col = position[0], position[1]
+    acc = 0
+    for i in range(row):
+        if board.getPos(row - i - 1, col) != turn:
+            return acc
+        else:
+            acc += 1
+    return acc
+
+def down(board: Board, position, turn: str) -> int:
+    row, col = position[0], position[1]
+    acc = 0
+    for i in range(5 - row):
+        if board.getPos(row + i + 1, col) != turn:
+            return acc
+        else:
+            acc += 1
+    return acc
+
+def winner2(board: Board, position, turn):
+    if up(board, position, turn) + down(board, position, turn) >= 4:
+        return True
+    elif right(board, position, turn) + left(board, position, turn) >= 4:
+        return True
+    
+
+
+          
+tab2 = Board()
+tab2.setPos(5,0,'X')
+tab2.setPos(5,1,'X')
+tab2.setPos(5,2,'X')
+tab2.setPos(5,5,'O')
+tab2.setPos(4,5,'O')
+print(tab2)
+print(left(tab2, [5, 0], 'X'))
+
+
+
 
 def possibleMoves(board: Board):
     # retorna uma lista com movimentos possiveis para a IA
     acc = []
     for i in range(7):
         position = testMoveValidity(board, i)
-        if position != False:
-            acc.append((i, position))
+        if type(position) is int:
+            print(position)
+
+            acc.append((position, i))
     return acc
+
 
 
