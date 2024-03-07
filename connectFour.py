@@ -114,64 +114,85 @@ def winner(board: Board):
                 if (line.count('-') == 0): return 'Tie'
     return False
 
-# def right(board: Board, position, turn: str) -> int:
-#     row, col = position[0], position[1]
-#     acc = 0
-#     for i in range(6 - col):
-#         if board.getPos(row, col + i + 1) != turn:
-#             return acc
-#         else:
-#             acc += 1
-#     return acc
+# def horizontal_check(board: Board, row, col, turn: str) -> int:
+#   acc = 1  
+#   for i in range(col + 1, 7):  # Limit to 6 (valid column index)
+#     if board.getPos(row, i) != turn:
+#       break
+#     acc += 1
+#   for i in range(col - 1, 0, -1):
+#     if board.getPos(row, i) != turn:
+#       break
+#     acc += 1
+#   return acc
 
-# def left(board: Board, position, turn: str) -> int:
-#     row, col = position[0], position[1]
-#     acc = 0
-#     for i in range(col):
-#         print(board.getPos(row, col - i - 1))
-#         if board.getPos(row, col - i - 1 ) != turn:
-#             return acc
-#         else:
-#             acc += 1
-#     return acc
+# def vertical_check(board: Board, row, col, turn: str) -> int:
+  
+#   acc = 1 
+#   for i in range(1, row + 1): 
+#     if board.getPos(row - i, col) != turn:
+#       break
+#     acc += 1
+#   for i in range(1, 5 - row):
+#     if board.getPos(row + i + 1, col) != turn:
+#       break
+#     acc += 1
+#   return acc
 
-# def up(board: Board, position, turn: str) -> int:
-#     row, col = position[0], position[1]
-#     acc = 0
-#     for i in range(row):
-#         if board.getPos(row - i - 1, col) != turn:
-#             return acc
-#         else:
-#             acc += 1
-#     return acc
+# def diag_left_to_right_down(board: Board, row: int, col: int, turn: str) -> int:
+#   acc = 1  
+#   for i in range(1, min(5 - row, 6 - col)):
+#     if board.getPos(row + i, col + i) != turn:
+#       break
+#     acc += 1
+    
+#   for i in range(1, min(row + 1, col + 1)):
+#     if board.getPos(row - i, col - i) != turn:
+#       break
+#     acc += 1
 
-# def down(board: Board, position, turn: str) -> int:
-#     row, col = position[0], position[1]
-#     acc = 0
-#     for i in range(5 - row):
-#         if board.getPos(row + i + 1, col) != turn:
-#             return acc
-#         else:
-#             acc += 1
-#     return acc
+#   print(acc)
+#   return acc
 
-# def winner2(board: Board, position, turn):
-#     if up(board, position, turn) + down(board, position, turn) >= 4:
+# def diag_left_to_right_up(board: Board, row: int, col: int, turn: str) -> int:
+#   acc = 1  
+#   for i in range(1, min(5 - row, col + 1)):
+#     if board.getPos(row + i, col - i) != turn:
+#       break
+#     acc += 1
+#   for i in range(1, min(row + 1, 6 - col)):
+#     if board.getPos(row - i , col + i) != turn:
+#       break
+#     acc += 1
+#   return acc
+
+# def winner2(board: Board, row, col, turn):
+
+#     if horizontal_check(board, row, col, turn) >= 4:
 #         return True
-#     elif right(board, position, turn) + left(board, position, turn) >= 4:
+    
+#     elif vertical_check(board, row, col, turn) >= 4:
 #         return True
+    
+#     elif diag_left_to_right_down(board, row, col, turn) >= 5:
+#         return True
+    
+#     elif diag_left_to_right_up(board, row, col, turn) >= 5:
+#         return True
+    
+#     return False
     
 
 
           
-# tab2 = Board()
-# tab2.setPos(5,0,'X')
-# tab2.setPos(5,1,'X')
-# tab2.setPos(5,2,'X')
-# tab2.setPos(5,5,'O')
-# tab2.setPos(4,5,'O')
-# print(tab2)
-# print(left(tab2, [5, 0], 'X'))
+# # tab2 = Board()
+# # tab2.setPos(5,0,'X')
+# # tab2.setPos(5,1,'X')
+# # tab2.setPos(5,2,'X')
+# # tab2.setPos(5,5,'O')
+# # tab2.setPos(4,5,'O')
+# # print(tab2)
+# # print(left(tab2, [5, 0], 'X'))
 
 
 

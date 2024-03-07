@@ -81,7 +81,7 @@ def gameAstar(board: Board, person):
     while True:
         print(board)
 
-        #checks if there is winner
+        # checks if there is winner
         win = winner(board)
         if not isinstance(win, bool):
             print('O vencedor é  ' + win + '.')
@@ -89,9 +89,18 @@ def gameAstar(board: Board, person):
         
         print('Tua vez.')
         board, col = Astar(board, order[0])
+        # line = testMoveValidity(board, col)
+        # win = winner2(board,line, col, order[0])
+        # if win == True:
+        #     print('O vencedor é  ' + order[0] + '.')
+        #     return False
+
+        #gamePerson(board, order[0])
+        print('A AI 1 pôs uma peça na coluna ' + str(col) + '.')
+        time.sleep(2)
 
         print(board)
-        time.sleep(2)
+        #time.sleep(2)
 
 
         #checks if there is winner
@@ -103,7 +112,14 @@ def gameAstar(board: Board, person):
             return win
 
         board, col = Astar(board, order[1])
-        print('A AI pôs uma peça na coluna ' + str(col) + '.')
+        # line = testMoveValidity(board, col)
+        # win = winner2(board,line, col, order[1])
+        # if win == True:
+        #     print('O vencedor é  ' + order[1] + '.')
+        #     return False
+        
+        print('A AI 2 pôs uma peça na coluna ' + str(col) + '.')
+        time.sleep(1)
 
 # b = Board()
 # b.setPos(5,0,'X')
