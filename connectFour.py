@@ -114,6 +114,55 @@ def winner(board: Board):
                 if (line.count('-') == 0): return 'Tie'
     return False
 
+def winner2(board: Board, row, col):
+    
+    #horizontal
+    limits_col = [max(0, col-3), min(6, col+3)]
+    sequence = [board.getPos(row, limits_col[0]), 0]
+    for i in range(limits_col[0], limits_col[1] + 1, 1):
+        if board.getPos(row, i) != sequence[0]:
+            sequence = [board.getPos(row, i), 1]
+        else:
+            sequence[1] += 1
+        if sequence[1] == 4:
+            return board.getPos(row, col)
+        
+    #vertical
+    limits_row = [max(0, row-3), min(5, row+3)]
+    sequence = [board.getPos(row, limits_row[0]), 0]
+    for i in range(limits_row[0], limits_row[1] + 1, 1):
+        if board.getPos(i, col) != sequence[0]:
+            sequence = [board.getPos(i, col), 1]
+        else:
+            sequence[1] += 1
+        if sequence[1] == 4:
+            return board.getPos(row, col)
+        
+    #vertical e-d c-b
+    interval = min(limits_row[1] - limits_col[0], limits_col[1] - limits_col[0])
+    sequence = [board.getPos(limits_row[0], limits_col[0]), 0]
+    for i in range(interval):
+        if board.getPos(limits_row[0] + i, limits_col[0] + i) != sequence[0]:
+            sequence = [board.getPos(limits_row[0] + i, limits_col[0] + i), 1]
+        else:
+            sequence[1] += 1
+        if sequence[1] == 4:
+            return board.getPos(row, col)
+    #vertical e-d b-c
+    
+    return False
+        
+tab = Board()
+tab.setPos(5,0,'O')
+tab.setPos(4,1,'O')
+tab.setPos(3,2,'X')
+tab.setPos(2,3,'X')
+tab.setPos(1,4,'X')
+tab.setPos(0,5,'X')
+
+print(tab)
+print(winner2(tab, 2,3))
+
 # def horizontal_check(board: Board, row, col, turn: str) -> int:
 #   acc = 1  
 #   for i in range(col + 1, 7):  # Limit to 6 (valid column index)
