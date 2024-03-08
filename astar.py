@@ -5,6 +5,7 @@ import time
 def getLinePoints(line, player) -> int:
     opponent = 'X' if player == 'O' else 'O'
     if (line.count('X') != 0 and line.count('O') != 0): return 0
+    
     if (line.count('X') == 3 and line.count('O') == 0): 
         if 'X' == opponent: return 250
         else: return 50
@@ -12,6 +13,7 @@ def getLinePoints(line, player) -> int:
         if 'X' == opponent: return 50
         else: return 10
     if (line.count('X') == 1 and line.count('O') == 0): return 1
+    
     if (line.count('X') == 0 and line.count('O') == 3):
         if 'O' == opponent: return -250
         else: return -50
@@ -19,38 +21,36 @@ def getLinePoints(line, player) -> int:
         if 'O' == opponent: return -50
         else: return -10
     if (line.count('X') == 0 and line.count('O') == 1): return -1
+    
     return 0
 
-def getPoints(board, player):
-    win = winner(board)
+def getPoints(board, player) -> int:
+    win = winnerAllBoard(board)
     if win == 'X': return 512
     if win == 'O': return -512
 
     points = 16 if player == 'X' else -16
 
-    #horizontal ALL POSSIBLE LINES CHECKED
+    #horizontal
     for row in range(6):
         for col in range(4):
             points += getLinePoints( [board.getPos(row, col + i) for i in range(4)], player)
-
-    #vertical ALL POSSIBLE LINES CHECKED
+    #vertical
     for col in range(7):
         for row in range(3):
             points += getLinePoints( [board.getPos(row + i, col) for i in range(4)], player)
-
-    #diagonal e-d c-b ALL POSSIBLE LINES CHECKED
+    #diagonal e-d c-b
     for row in range(3):
         for col in range(4):
             points += getLinePoints( [board.getPos(row + i, col + i) for i in range(4)], player)
-
-    #diagonal e-d b-c ALL POSSIBLE LINES CHECKED
+    #diagonal e-d b-c 
     for row in range(3,6,1):
         for col in range(4):
             points += getLinePoints( [board.getPos(row - i, col + i) for i in range(4)], player)
 
     return points
 
-def Astar(node : Board, ai):
+def Astar(node : Board, ai) -> list:
     moves = possibleMoves(node)
     points = getPoints(node, ai)
     best_move = [node, points, 0]
@@ -60,68 +60,51 @@ def Astar(node : Board, ai):
         copy_points = getPoints(copy, ai)
         if ai == 'X':
             if copy_points == 512:
-                return [copy, move[1]]
+                return [copy, move[0], move[1]]
             if copy_points > best_move[1]:
-                best_move = [copy, copy_points, move[1]]
+                best_move = [copy, copy_points, move[0], move[1]]
         else:
             if copy_points == -512:
-                return [copy, move[1]]
+                return [copy, move[0], move[1]]
             if copy_points < best_move[1]:
-                best_move = [copy, copy_points, move[1]]
-                
+                best_move = [copy, copy_points, move[0], move[1]]
+    
+    #para verificar se ela não joga         
     if node == best_move[0]:
-        print('IGUALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+        print('-------------------------------------------------------------------------------------------')
         
-    return [best_move[0], best_move[2]]
+    return [best_move[0], best_move[2], best_move[3]]
 
-def gameAstar(board: Board, person):
-    #gives a list [person, ai]
-    order = inputPlayer(person)
-
+def gameAstar(board: Board, order):
+    print(board)
     while True:
-        print(board)
-
-        #checks if there is winner
-        win = winner(board)
-        if not isinstance(win, bool):
-            if win == 'Tie': 
-                print('Empate.')
-            print('O vencedor é ' + win + '.')
-            return win
-        
         print('Tua vez.')
-        gamePerson(board, order[0])
+        turn, col, line = askForNextMove(board, order[0])
+        move(board, turn, col, line)
         print(board)
-
-        win = winner(board)
-        if not isinstance(win, bool):
-            if win == 'Tie': 
+        
+        #checks winner
+        win = winner(board, line, col)
+        if isinstance(win, str):
+            if win == 'Tie':
                 print('Empate.')
-            print('O vencedor é ' + win + '.')
-            return win
+            elif win == order[0]:
+                print('Ganhaste.')
+            else:
+                print('A IA ganhou.')
+            return False
         
-        board, col = Astar(board, order[1])
-        print('A AI 2 pôs uma peça na coluna ' + str(col) + '.')
+        board, line, col = Astar(board, order[1])
+        print('A IA 2 pôs uma peça na coluna ' + str(col) + '.')
+        print(board)
         
-# b = Board()
-# b.setPos(5,0,'X')
-# b.setPos(5,2,'X')
-# b.setPos(5,3,'X')
-# b.setPos(3,2,'X')
-# b.setPos(3,3,'X')
-# b.setPos(1,2,'X')
-# b.setPos(1,3,'X')
-# b.setPos(5,4,'O')
-# b.setPos(4,3,'O')
-# b.setPos(4,2,'O')
-# b.setPos(2,3,'O')
-# b.setPos(2,2,'O')
-# b.setPos(0,3,'O')
-# print(b)
-# print(getPoints(b,'O'))
-# b.setPos(5,1,'O')
-# print(b)
-# print(getPoints(b,'O'))
-# b.setPos(5,1,'-')
-# b.setPos(4,4,'O')
-# print(b)
+        #checks winner
+        win = winner(board, line, col)
+        if isinstance(win, str):
+            if win == 'Tie':
+                print('Empate')
+            elif win == order[0]:
+                print('Ganhaste.')
+            else:
+                print('A IA ganhou.')
+            return False

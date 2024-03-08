@@ -3,16 +3,14 @@ from board import Board
 
 tabuleiro = Board()
 
-def inputPlayer(letter):
-    # define qual letra para cada jogador retorna [X, O] or [O, X]
+def inputPlayer(letter) -> list:
+    #retorna lista com a ordem do jogador
     if letter == 'X':
         return ['X', 'O']
     else:
         return ['O', 'X']
 
-def askForFirstPlayer():
-    #perguntar ao jogador quem é que deve jogar primeiro, as opções
-    #podem ser por exemplo "white", "black" ou "random" e retorna o valor relacionado
+def askForFirstPlayer() -> str:
     valid = False
     while not valid:
         piece = input("Queres ser X, O or R? ")
@@ -22,7 +20,7 @@ def askForFirstPlayer():
             m = random.randint(0, 1)
             return "X" if m == 0 else "O"
 
-def askForAlgorithm():
+def askForAlgorithm() -> int:
     while True:
         try:
             algorithm = int(input("Qual algoritmo queres? 1 - P vs P, 2 - A*, 3 - MC : "))
@@ -35,7 +33,7 @@ def askForAlgorithm():
         else:
             print('Tente um número de 1 a 3. \n')
         
-def playAgain():
+def playAgain() -> bool:
     while True:
         play = input(("Queres jogar de novo? S ou N. : "))
         if play.upper() == 'S':
@@ -45,9 +43,9 @@ def playAgain():
         else:
             print('Tente S ou N. \n')
 
-def testMoveValidity(board: Board, col) -> int | bool:
-    # testa se a jogada é válida se a casa esta vazia e qual a posição esta vazia
-    # retorna a posição que esta vazia ou false
+def testMoveValidity(board: Board, col) -> int:
+    #retorna -1 se não for valido
+    #retorna o numero da coluna se for valido
     for i in range(6):
         if board.getPos(5-i, col) == "-":
             return 5 - i
@@ -70,7 +68,7 @@ def testMove(board: Board, col) -> bool | int:
 def move(board: Board, turn, col, line) -> None:
     board.setPos(line, col, turn)
 
-def askForNextMove(board, turn):
+def askForNextMove(board, turn) -> tuple:
     while True:
         try:
             move_col = int(input("Em qual coluna? "))
@@ -84,8 +82,9 @@ def askForNextMove(board, turn):
         else:
             return (turn, move_col, move)
 
-def winner(board: Board):
-
+def winnerAllBoard(board: Board) -> str | bool:
+    #útil para a ai
+    #mais eficiente a outra função para verificar a jogada do player
     for row in range(6):
         for col in range(7):
             
@@ -114,7 +113,10 @@ def winner(board: Board):
                 if (line.count('-') == 0): return 'Tie'
     return False
 
-def winner2(board: Board, row, col):
+def winner(board: Board, row, col) -> str | bool:
+    #verifica apenas as linhas que incluem a casa onde foi jogada uma peça
+    if board.getRow(0).count('-') == 0:
+        return 'Tie'
     
     #horizontal
     limits_col = [max(0, col-3), min(6, col+3)]
@@ -124,7 +126,7 @@ def winner2(board: Board, row, col):
             sequence = [board.getPos(row, i), 1]
         else:
             sequence[1] += 1
-        if sequence[1] == 4:
+        if (sequence[1] == 4 and sequence[0] != '-'):
             return board.getPos(row, col)
         
     #vertical
@@ -135,118 +137,33 @@ def winner2(board: Board, row, col):
             sequence = [board.getPos(i, col), 1]
         else:
             sequence[1] += 1
-        if sequence[1] == 4:
+        if (sequence[1] == 4 and sequence[0] != '-'):
             return board.getPos(row, col)
         
     #vertical e-d c-b
-    interval = min(limits_row[1] - limits_col[0], limits_col[1] - limits_col[0])
+    interval = min(limits_row[1] - limits_row[0], limits_col[1] - limits_col[0]) #numero de casas da diagonal a ver
     sequence = [board.getPos(limits_row[0], limits_col[0]), 0]
     for i in range(interval):
         if board.getPos(limits_row[0] + i, limits_col[0] + i) != sequence[0]:
             sequence = [board.getPos(limits_row[0] + i, limits_col[0] + i), 1]
         else:
             sequence[1] += 1
-        if sequence[1] == 4:
+        if (sequence[1] == 4 and sequence[0] != '-'):
             return board.getPos(row, col)
+        
     #vertical e-d b-c
+    sequence = [board.getPos(limits_row[0], limits_col[0]), 0]
+    for i in range(interval):
+        if board.getPos(limits_row[1] - i, limits_col[0] + i) != sequence[0]:
+            sequence = [board.getPos(limits_row[1] - i, limits_col[0] + i), 1]
+        else:
+            sequence[1] += 1
+        if (sequence[1] == 4 and sequence[0] != '-'):
+            return board.getPos(row, col)
     
     return False
-        
-tab = Board()
-tab.setPos(5,0,'O')
-tab.setPos(4,1,'O')
-tab.setPos(3,2,'X')
-tab.setPos(2,3,'X')
-tab.setPos(1,4,'X')
-tab.setPos(0,5,'X')
 
-print(tab)
-print(winner2(tab, 2,3))
-
-# def horizontal_check(board: Board, row, col, turn: str) -> int:
-#   acc = 1  
-#   for i in range(col + 1, 7):  # Limit to 6 (valid column index)
-#     if board.getPos(row, i) != turn:
-#       break
-#     acc += 1
-#   for i in range(col - 1, 0, -1):
-#     if board.getPos(row, i) != turn:
-#       break
-#     acc += 1
-#   return acc
-
-# def vertical_check(board: Board, row, col, turn: str) -> int:
-  
-#   acc = 1 
-#   for i in range(1, row + 1): 
-#     if board.getPos(row - i, col) != turn:
-#       break
-#     acc += 1
-#   for i in range(1, 5 - row):
-#     if board.getPos(row + i + 1, col) != turn:
-#       break
-#     acc += 1
-#   return acc
-
-# def diag_left_to_right_down(board: Board, row: int, col: int, turn: str) -> int:
-#   acc = 1  
-#   for i in range(1, min(5 - row, 6 - col)):
-#     if board.getPos(row + i, col + i) != turn:
-#       break
-#     acc += 1
-    
-#   for i in range(1, min(row + 1, col + 1)):
-#     if board.getPos(row - i, col - i) != turn:
-#       break
-#     acc += 1
-
-#   print(acc)
-#   return acc
-
-# def diag_left_to_right_up(board: Board, row: int, col: int, turn: str) -> int:
-#   acc = 1  
-#   for i in range(1, min(5 - row, col + 1)):
-#     if board.getPos(row + i, col - i) != turn:
-#       break
-#     acc += 1
-#   for i in range(1, min(row + 1, 6 - col)):
-#     if board.getPos(row - i , col + i) != turn:
-#       break
-#     acc += 1
-#   return acc
-
-# def winner2(board: Board, row, col, turn):
-
-#     if horizontal_check(board, row, col, turn) >= 4:
-#         return True
-    
-#     elif vertical_check(board, row, col, turn) >= 4:
-#         return True
-    
-#     elif diag_left_to_right_down(board, row, col, turn) >= 5:
-#         return True
-    
-#     elif diag_left_to_right_up(board, row, col, turn) >= 5:
-#         return True
-    
-#     return False
-    
-
-
-          
-# # tab2 = Board()
-# # tab2.setPos(5,0,'X')
-# # tab2.setPos(5,1,'X')
-# # tab2.setPos(5,2,'X')
-# # tab2.setPos(5,5,'O')
-# # tab2.setPos(4,5,'O')
-# # print(tab2)
-# # print(left(tab2, [5, 0], 'X'))
-
-
-
-
-def possibleMoves(board: Board):
+def possibleMoves(board: Board) -> list:
     # retorna uma lista com movimentos possiveis para a IA
     acc = []
     for i in range(7):
@@ -254,7 +171,3 @@ def possibleMoves(board: Board):
         if position != -1:
             acc.append((position, i))
     return acc
-
-def gamePerson(board: Board, player):
-    turn, col, line = askForNextMove(board, player)
-    move(board, turn, col, line)

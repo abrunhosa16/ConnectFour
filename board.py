@@ -8,7 +8,7 @@ class Board:
                 vetor.append('-')
             self.board.append(vetor)
         
-    def __str__(self):
+    def __str__(self) -> str:
         string = ''
         for i in range(7):
             string += ''.join(str(i) + " ") 
@@ -18,10 +18,10 @@ class Board:
             string += ' '.join(self.board[row]) + '\n'
         return string
         
-    def getRow(self, row):
+    def getRow(self, row) -> list:
         return self.board[row]
     
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         for row in range(6):
             if self.board[row] != other.getRow(row):
                 return False
@@ -32,7 +32,7 @@ class Board:
             for col in range(7):
                 self.board[row][col] = '-'
 
-    def getPos(self, row, col):
+    def getPos(self, row, col) -> str:
             return self.board[row][col]
     
     def setPos(self, row, col, player):

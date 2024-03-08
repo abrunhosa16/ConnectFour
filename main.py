@@ -10,22 +10,16 @@ def main():
     play = True
     while play:
         board.resetBoard()
-        start_p = askForFirstPlayer()
-
-        if start_p == 'X':
-            sec_p = 'O'
-        else:
-            sec_p = 'X'
-
+        order = inputPlayer(askForFirstPlayer())
         game = askForAlgorithm()
         if game == 1:
-            print("Escolhido Player vs Player", end="\n")
-            gamePvsP(board, start_p, sec_p)
+            print("Escolhido Player vs Player.", end="\n")
+            gamePvsP(board, order)
         if game == 2:
-            print("Escolhido A*", end="\n")
-            gameAstar(board, start_p)
+            print("Escolhido A*.", end="\n")
+            gameAstar(board, order)
         if game == 3:
-            print("Escolhido MonteCarlo", end="\n")
+            print("Escolhido MonteCarlo.", end="\n")
 
         play = playAgain()
 
