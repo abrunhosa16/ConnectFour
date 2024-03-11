@@ -1,7 +1,5 @@
 import random
-from board import *
-
-tabuleiro = Board()
+from board import Board
 
 def inputPlayer(letter) -> list:
     #retorna lista com a ordem do jogador
@@ -82,7 +80,7 @@ def askForNextMove(board, turn) -> tuple:
         else:
             return (turn, move_col, move)
 
-def winner(board:Board, order:list) -> bool:
+def winnerAi(board:Board, order:list) -> bool:
     win = board.finished()
     if isinstance(win, str):
         if win == 'Tie':

@@ -83,7 +83,7 @@ def gameAstar(board: Board, order):
         print(board)
         
         #checks winner
-        if winner(board, order):
+        if winnerAi(board, order):
             return None
         
         board, line, col = Astar(board, order[1])
@@ -91,5 +91,5 @@ def gameAstar(board: Board, order):
         print(board)
         
         #checks winner
-        if winner(board, order):
+        if winnerAi(board, order):
             return None

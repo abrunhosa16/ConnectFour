@@ -93,7 +93,7 @@ def game_monte_carlo(board: Board, order: list):
     print(board)
     while True:
         #checks winner
-        if winner(board, order):
+        if winnerAi(board, order):
             return None
         
         print('Tua vez.')
@@ -102,7 +102,7 @@ def game_monte_carlo(board: Board, order: list):
         print(board)
         
         #checks winner
-        if winner(board, order):
+        if winnerAi(board, order):
             return None
         
         board = monte_carlo(Node(board, order[1]), 2).state
