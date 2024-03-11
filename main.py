@@ -1,8 +1,8 @@
 from board import Board
-from connectFour import *
-from PvsP import * 
-from astar import *
-from monteCarlo import *
+from connectFour import inputPlayer, askForFirstPlayer, askForAlgorithm, playAgain
+from PvsP import gamePvsP
+from astar import gameAstar
+from monteCarlo import game_monte_carlo
 
 board = Board()
 
@@ -20,7 +20,7 @@ def main():
             gameAstar(board, order)
         if game == 3:
             print("Escolhido MonteCarlo.", end="\n")
-
+            game_monte_carlo(board, order)
         play = playAgain()
 
 

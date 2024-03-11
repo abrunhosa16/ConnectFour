@@ -1,6 +1,5 @@
 from connectFour import *
 from board import *
-import time
 
 def getLinePoints(line, player) -> int:
     opponent = 'X' if player == 'O' else 'O'
@@ -24,11 +23,11 @@ def getLinePoints(line, player) -> int:
     
     return 0
 
-def getPoints(board: Board, player: str, move=None) -> int:
-    if move:
-        win = winner(board, move[0], move[1])
-        if win == 'X': return 512
-        if win == 'O': return -512
+def getPoints(board: Board, player: str) -> int:
+    win = board.finished()
+    if win == 'X': return 512
+    if win == 'O': return -512
+    if win == 'Tie': return 0
 
     points = 16 if player == 'X' else -16
 
@@ -51,24 +50,23 @@ def getPoints(board: Board, player: str, move=None) -> int:
 
     return points
 
-def Astar(node : Board, ai) -> list:
-    moves = possibleMoves(node)
+def Astar(node : Board, ai: str) -> list:
+    moves = possibleMoves(node, ai)
     points = getPoints(node, ai)
     best_move = [node, points, 0]
     for move in moves:
-        copy = node.boardCopy()
-        copy.setPos(move[0], move[1], ai)
-        copy_points = getPoints(copy, ai, move)
+        state, line, col = move
+        state_points = getPoints(state, ai)
         if ai == 'X':
-            if copy_points == 512:
-                return [copy, move[0], move[1]]
-            if copy_points > best_move[1]:
-                best_move = [copy, copy_points, move[0], move[1]]
+            if state_points == 512:
+                return state
+            if state_points > best_move[1]:
+                best_move = [state, state_points, line, col]
         else:
-            if copy_points == -512:
-                return [copy, move[0], move[1]]
-            if copy_points < best_move[1]:
-                best_move = [copy, copy_points, move[0], move[1]]
+            if state_points == -512:
+                return [state, line, col]
+            if state_points < best_move[1]:
+                best_move = [state, state_points, line, col]
     
     #para verificar se ela não joga         
     if node == best_move[0]:
@@ -85,27 +83,13 @@ def gameAstar(board: Board, order):
         print(board)
         
         #checks winner
-        win = winner(board, line, col)
-        if isinstance(win, str):
-            if win == 'Tie':
-                print('Empate.')
-            elif win == order[0]:
-                print('Ganhaste.')
-            else:
-                print('A IA ganhou.')
-            return False
+        if winner(board, order):
+            return None
         
         board, line, col = Astar(board, order[1])
         print('A IA 2 pôs uma peça na coluna ' + str(col) + '.')
         print(board)
         
         #checks winner
-        win = winner(board, line, col)
-        if isinstance(win, str):
-            if win == 'Tie':
-                print('Empate')
-            elif win == order[0]:
-                print('Ganhaste.')
-            else:
-                print('A IA ganhou.')
-            return False
+        if winner(board, order):
+            return None

@@ -1,5 +1,5 @@
 import random
-from board import Board
+from board import *
 
 tabuleiro = Board()
 
@@ -82,61 +82,76 @@ def askForNextMove(board, turn) -> tuple:
         else:
             return (turn, move_col, move)
 
-def winner(board: Board, row, col) -> str | bool:
-    #verifica apenas as linhas que incluem a casa onde foi jogada uma peça
-    if board.getRow(0).count('-') == 0:
-        return 'Tie'
-    
-    #horizontal
-    limits_col = [max(0, col-3), min(6, col+3)]
-    sequence = [board.getPos(row, limits_col[0]), 0]
-    for i in range(limits_col[0], limits_col[1] + 1, 1):
-        if board.getPos(row, i) != sequence[0]:
-            sequence = [board.getPos(row, i), 1]
+def winner(board:Board, order:list) -> bool:
+    win = board.finished()
+    if isinstance(win, str):
+        if win == 'Tie':
+            print('Empate.')
+        elif win == order[0]:
+            print('Ganhaste.')
         else:
-            sequence[1] += 1
-        if (sequence[1] == 4 and sequence[0] != '-'):
-            return board.getPos(row, col)
-        
-    #vertical
-    limits_row = [max(0, row-3), min(5, row+3)]
-    sequence = [board.getPos(row, limits_row[0]), 0]
-    for i in range(limits_row[0], limits_row[1] + 1, 1):
-        if board.getPos(i, col) != sequence[0]:
-            sequence = [board.getPos(i, col), 1]
-        else:
-            sequence[1] += 1
-        if (sequence[1] == 4 and sequence[0] != '-'):
-            return board.getPos(row, col)
-        
-    #vertical e-d c-b
-    interval = min(limits_row[1] - limits_row[0], limits_col[1] - limits_col[0]) #numero de casas da diagonal a ver
-    sequence = [board.getPos(limits_row[0], limits_col[0]), 0]
-    for i in range(interval):
-        if board.getPos(limits_row[0] + i, limits_col[0] + i) != sequence[0]:
-            sequence = [board.getPos(limits_row[0] + i, limits_col[0] + i), 1]
-        else:
-            sequence[1] += 1
-        if (sequence[1] == 4 and sequence[0] != '-'):
-            return board.getPos(row, col)
-        
-    #vertical e-d b-c
-    sequence = [board.getPos(limits_row[0], limits_col[0]), 0]
-    for i in range(interval):
-        if board.getPos(limits_row[1] - i, limits_col[0] + i) != sequence[0]:
-            sequence = [board.getPos(limits_row[1] - i, limits_col[0] + i), 1]
-        else:
-            sequence[1] += 1
-        if (sequence[1] == 4 and sequence[0] != '-'):
-            return board.getPos(row, col)
-    
+            print('A IA ganhou.')
+        return True
     return False
 
-def possibleMoves(board: Board) -> list:
-    # retorna uma lista com movimentos possiveis para a IA
+
+# def winner(board: Board, row, col) -> str | bool:
+#     #verifica apenas as linhas que incluem a casa onde foi jogada uma peça
+#     if board.getRow(0).count('-') == 0:
+#         return 'Tie'
+    
+#     #horizontal
+#     limits_col = [max(0, col-3), min(6, col+3)]
+#     sequence = [board.getPos(row, limits_col[0]), 0]
+#     for i in range(limits_col[0], limits_col[1] + 1, 1):
+#         if board.getPos(row, i) != sequence[0]:
+#             sequence = [board.getPos(row, i), 1]
+#         else:
+#             sequence[1] += 1
+#         if (sequence[1] == 4 and sequence[0] != '-'):
+#             return board.getPos(row, col)
+        
+#     #vertical
+#     limits_row = [max(0, row-3), min(5, row+3)]
+#     sequence = [board.getPos(row, limits_row[0]), 0]
+#     for i in range(limits_row[0], limits_row[1] + 1, 1):
+#         if board.getPos(i, col) != sequence[0]:
+#             sequence = [board.getPos(i, col), 1]
+#         else:
+#             sequence[1] += 1
+#         if (sequence[1] == 4 and sequence[0] != '-'):
+#             return board.getPos(row, col)
+        
+#     #vertical e-d c-b
+#     interval = min(limits_row[1] - limits_row[0], limits_col[1] - limits_col[0]) #numero de casas da diagonal a ver
+#     sequence = [board.getPos(limits_row[0], limits_col[0]), 0]
+#     for i in range(interval):
+#         if board.getPos(limits_row[0] + i, limits_col[0] + i) != sequence[0]:
+#             sequence = [board.getPos(limits_row[0] + i, limits_col[0] + i), 1]
+#         else:
+#             sequence[1] += 1
+#         if (sequence[1] == 4 and sequence[0] != '-'):
+#             return board.getPos(row, col)
+        
+#     #vertical e-d b-c
+#     sequence = [board.getPos(limits_row[0], limits_col[0]), 0]
+#     for i in range(interval):
+#         if board.getPos(limits_row[1] - i, limits_col[0] + i) != sequence[0]:
+#             sequence = [board.getPos(limits_row[1] - i, limits_col[0] + i), 1]
+#         else:
+#             sequence[1] += 1
+#         if (sequence[1] == 4 and sequence[0] != '-'):
+#             return board.getPos(row, col)
+    
+#     return False
+
+def possibleMoves(board: Board, player:str) -> list:
+    # retorna os proximos estados
     acc = []
-    for i in range(7):
-        position = testMoveValidity(board, i)
-        if position != -1:
-            acc.append((position, i))
+    for col in range(7):
+        line = testMoveValidity(board, col)
+        if line != -1:
+            cur = board.boardCopy()
+            cur.setPos(line, col, player)
+            acc.append((cur, line, col))
     return acc
