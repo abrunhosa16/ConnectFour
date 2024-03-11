@@ -82,37 +82,6 @@ def askForNextMove(board, turn) -> tuple:
         else:
             return (turn, move_col, move)
 
-def winnerAllBoard(board: Board) -> str | bool:
-    #útil para a ai
-    #mais eficiente a outra função para verificar a jogada do player
-    for row in range(6):
-        for col in range(7):
-            
-            #horizontal
-            if col <= 3:
-                if (board.getPos(row, col) == board.getPos(row, col + 1) == board.getPos(row, col + 2) == board.getPos(row, col + 3) and board.getPos(row, col) != '-'):
-                    return board.getPos(row, col)
-
-            #vertical
-            if row <= 2:
-                if (board.getPos(row, col) == board.getPos(row + 1, col) == board.getPos(row + 2, col) == board.getPos(row + 3, col) and board.getPos(row, col) != '-'):
-                    return board.getPos(row, col)
-
-            #diagonal
-            if (col <= 3 and row <= 2):
-                if (board.getPos(row, col) == board.getPos(row + 1, col + 1) == board.getPos(row + 2, col + 2) == board.getPos(row + 3, col + 3) and board.getPos(row, col) != '-'):
-                    return board.getPos(row, col)
-
-            #diagonal
-            if (col <= 3 and row >= 3):
-                if (board.getPos(row, col) == board.getPos(row - 1, col + 1) == board.getPos(row - 2, col + 2) == board.getPos(row - 3, col + 3) and board.getPos(row, col) != '-'):
-                    return board.getPos(row, col)
-                
-            if (row == 0):
-                line = board.getRow(row)
-                if (line.count('-') == 0): return 'Tie'
-    return False
-
 def winner(board: Board, row, col) -> str | bool:
     #verifica apenas as linhas que incluem a casa onde foi jogada uma peça
     if board.getRow(0).count('-') == 0:

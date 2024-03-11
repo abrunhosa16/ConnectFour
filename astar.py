@@ -24,10 +24,11 @@ def getLinePoints(line, player) -> int:
     
     return 0
 
-def getPoints(board, player) -> int:
-    win = winnerAllBoard(board)
-    if win == 'X': return 512
-    if win == 'O': return -512
+def getPoints(board: Board, player: str, move=None) -> int:
+    if move:
+        win = winner(board, move[0], move[1])
+        if win == 'X': return 512
+        if win == 'O': return -512
 
     points = 16 if player == 'X' else -16
 
@@ -57,7 +58,7 @@ def Astar(node : Board, ai) -> list:
     for move in moves:
         copy = node.boardCopy()
         copy.setPos(move[0], move[1], ai)
-        copy_points = getPoints(copy, ai)
+        copy_points = getPoints(copy, ai, move)
         if ai == 'X':
             if copy_points == 512:
                 return [copy, move[0], move[1]]
