@@ -36,12 +36,12 @@ class Node:
             self.parent.increase_win_value(player)
     
     def get_score(self):
+        if self.visits == 0:
+            return float('inf')
         parent = self.parent
-        if self.visits != 0:
-            exploitation = self.wins / self.visits
-            exploration = sqrt(2) * sqrt(2 * ln(parent.visits) / self.visits) if parent else 0
-            return exploitation + exploration
-        return 0
+        exploitation = self.wins / self.visits
+        exploration = sqrt(2) * sqrt(2 * ln(parent.visits) / self.visits) if parent else 0
+        return exploitation + exploration
     
     def get_best_child(self):
         best_score = float('-inf')
@@ -63,10 +63,14 @@ def new_childs(node: Node):
         node.add_child(child)
         
 def selection(node: Node):
-    return node.get_best_child()
+    root = node
+    while len(node.children) != 0:
+        node = node.get_best_child()    
+    return node
     
 def expansion(node: Node):
     new_childs(node)
+    return random.choice(node.children)
        
 def simulation(node: Node) -> None:
     while node.state.finished() == False:
@@ -78,14 +82,13 @@ def monte_carlo(root: Node, maxTime):
     while time.time() - start < maxTime:
         node = root
         new_childs(node)
-        # Selection
+        
         while node.children:
             node = selection(node)
-        # Expansion
+        
         if isinstance(node.state.finished(), bool):
-            expansion(node)
-            node = random.choice(node.children)
-        # Simulation
+            node = expansion(node)
+        
         simulation(node)
     return root.get_best_child()
 
@@ -115,7 +118,39 @@ for i in range(10):
     b, line, col = random.choice(moves)
     player.reverse()
 print(b)
+node = Node(b)
 
-n=Node(b, player[0])
-p=monte_carlo(n, 2)
-print(p.state)
+moves = possibleMoves(b, player[0])
+l = []
+for _ in range(3):
+    l.append(random.choice(moves)[0])
+node1 = Node(l[0])
+node2 = Node(l[1])
+node3 = Node(l[2])
+node.add_child(node1)
+node.add_child(node2)
+node.add_child(node3)
+node1.player = player[1]
+node2.player = player[1]
+node3.player = player[1]
+
+pick = [1,2,3]
+for _ in range(100):
+    n = random.choice(pick)
+    if n == 1:
+        node1.increase_win_value(player[0])
+    elif n == 2:
+        node2.increase_win_value(player[0])
+    else:
+        node3.increase_win_value(player[0])
+    player.reverse()
+
+print(node1, node1.get_score())
+print(node2, node2.get_score())
+print(node3, node3.get_score())
+
+print(selection(node))
+
+# n=Node(b, player[0])
+# p=monte_carlo(n, 2)
+# print(p.state)
