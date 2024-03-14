@@ -1,8 +1,8 @@
 from board import *
 from connectFour import *
 
-def winnerPvsP(board: Board) -> bool:
-    win = board.finished()
+def winnerPvsP(board: Board, line:int, col:int) -> bool:
+    win = board.finished_from(line, col)
     if isinstance(win, str):
         if win == 'Tie':
             print('Empate')
@@ -16,19 +16,17 @@ def gamePvsP(board, order):
     print(board)
     while True:   
         print('Primeiro jogador.')     
-        turn, col, line = askForNextMove(board, start_p)
-        move(board, turn, col, line)
+        line, col = askForNextMove(board, start_p)
         print(board)
         
         #checks winner
-        if winnerPvsP(board):
+        if winnerPvsP(board, line, col):
             return None
         
         print("Segundo Jogador.")
-        turn, col, line = askForNextMove(board, sec_p)
-        move(board, turn, col, line)
+        line, col = askForNextMove(board, sec_p)
         print(board)
         
         #checks winner
-        if winnerPvsP(board):
+        if winnerPvsP(board, line, col):
             return None

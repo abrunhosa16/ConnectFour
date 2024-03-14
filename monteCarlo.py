@@ -24,133 +24,131 @@ class Node:
     def add_child(self, child) -> None:
         self.children.append(child)
         child.parent = self
-        if self.player == 'X':
-            child.player = 'O'
-        else: child.player = 'X'
-
-    def increase_win_value(self, player: str):
-        self.visits += 1
-        if self.player == player:
-            self.wins += 1
-        if self.parent:
-            self.parent.increase_win_value(player)
+        child.player = 'O' if self.player == 'X' else 'X'
     
-    def get_score(self):
+    def uct(self, exploration_factor:int):
         if self.visits == 0:
             return float('inf')
         parent = self.parent
+        
+        if not parent or parent.visits == 0:
+            parent_visits = 1
+        else:
+            parent_visits = parent.visits
         exploitation = self.wins / self.visits
-        exploration = sqrt(2) * sqrt(2 * ln(parent.visits) / self.visits) if parent else 0
+        exploration = exploration_factor * sqrt(ln(parent_visits) / self.visits)
         return exploitation + exploration
     
     def get_best_child(self):
+        scores = [(child, child.uct()) for child in self.children]
+        best_score = float('-inf')
+        best_childs = []
+        for child, score in scores:
+            if best_score < score: 
+                best_score = score
+                best_childs = [child]
+            elif best_score == score:
+                best_childs.append(child)
+        return random.choice(best_childs)
+
+class MCTS:
+    def __init__(self, state:Board, player:str, exploration_factor:int) -> None:
+        self.root = Node(state, player)
+        self.exploration_factor = exploration_factor
+        
+    def refresh_state(self, state:Board):
+        player = 'X' if self.root.player == 'O' else 'O'
+        if len(self.root.children) != 0:
+            for child in self.root.children:
+                if child.state == state:
+                    self.root = child
+                    return
+        self.root = Node(state)
+        self.root.player = player
+        
+    def select(self) -> Node:
+        node = self.root
+        while len(node.children) != 0:
+            best_score = float('-inf')
+            best_child = None
+            for child in node.children:
+                # Calculate UCT score for each child
+                uct_score = child.uct(self.exploration_factor)
+                if uct_score > best_score:
+                    best_child = child
+                    best_score = uct_score
+            node = best_child
+            if node.visits == 0:
+                return node
+        if self.expand(node):
+            node = random.choice(node.children)
+        return node
+      
+    def expand(self, node:Node) -> bool:
+        if isinstance(self.root.state.finished(), str):
+            return False
+        oponnent = 'O' if self.root.player == 'X' else 'X'
+        children = [child for child, *_ in possibleMoves(self.root.state, self.root.player)]
+        for child_state in children:
+            node.add_child(Node(child_state, oponnent))
+        return True
+    
+    def simulate(self, node:Node) -> str:
+        state = node.state
+        player = ['X', 'O'] if node.player == 'X' else ['O', 'X']
+        while isinstance(state.finished(), bool):
+            results = [cur[0] for cur in possibleMoves(state, player[0])]
+            state = random.choice(results)
+            player.reverse()
+        return state.finished()
+    
+    def back_propagation(self, node:Node, result:str) -> None:
+        while node.parent:
+            point = 1 if node.player == result else 0
+            node.visits += 1
+            node.wins += point
+            node = node.parent
+        
+    def search(self, max_time:int):
+        start = time.time()
+        while time.time() - start < max_time:
+            node = self.select()
+            result = self.simulate(node)
+            self.back_propagation(node, result)
+        
+    def best_move(self) -> Node:
         best_score = float('-inf')
         best_child = []
-        for child in self.children:
-            score = child.get_score()
+        for child in self.root.children:
+            score = child.uct(self.exploration_factor)
             if best_score < score:
                 best_child = [child]
                 best_score = score
             elif best_score == score:
                 best_child.append(child)
+        print(best_child)
         return random.choice(best_child)
-
-def new_childs(node: Node):
-    board = node.state
-    moves = possibleMoves(board, node.player)
-    for state, row, col in moves:
-        child = Node(state)
-        node.add_child(child)
-        
-def selection(node: Node):
-    root = node
-    while len(node.children) != 0:
-        node = node.get_best_child()    
-    return node
-    
-def expansion(node: Node):
-    new_childs(node)
-    return random.choice(node.children)
-       
-def simulation(node: Node) -> None:
-    while node.state.finished() == False:
-        new_childs(node)
-        node = random.choice(node.children)
-
-def monte_carlo(root: Node, maxTime):
-    start = time.time()
-    while time.time() - start < maxTime:
-        node = root
-        new_childs(node)
-        
-        while node.children:
-            node = selection(node)
-        
-        if isinstance(node.state.finished(), bool):
-            node = expansion(node)
-        
-        simulation(node)
-    return root.get_best_child()
 
 def game_monte_carlo(board: Board, order: list):
     print(board)
+    mcts = MCTS(board, order[0], sqrt(2))
     while True:
         #checks winner
         if winnerAi(board, order):
             return None
         
         print('Tua vez.')
-        turn, col, line = askForNextMove(board, order[0])
-        move(board, turn, col, line)
+        askForNextMove(board, order[0])
+        mcts.refresh_state(board) #estado é atualizado
         print(board)
         
         #checks winner
         if winnerAi(board, order):
             return None
         
-        board = monte_carlo(Node(board, order[1]), 2).state
+        print('IA')
+        mcts.search(3)
+        best_node = mcts.best_move()
+        board = best_node.state
+        mcts.refresh_state(board)
         print(board)
-
-b=Board()
-player = ['X', 'O']
-for i in range(10):
-    moves = possibleMoves(b, player[0])
-    b, line, col = random.choice(moves)
-    player.reverse()
-print(b)
-node = Node(b)
-
-moves = possibleMoves(b, player[0])
-l = []
-for _ in range(3):
-    l.append(random.choice(moves)[0])
-node1 = Node(l[0])
-node2 = Node(l[1])
-node3 = Node(l[2])
-node.add_child(node1)
-node.add_child(node2)
-node.add_child(node3)
-node1.player = player[1]
-node2.player = player[1]
-node3.player = player[1]
-
-pick = [1,2,3]
-for _ in range(100):
-    n = random.choice(pick)
-    if n == 1:
-        node1.increase_win_value(player[0])
-    elif n == 2:
-        node2.increase_win_value(player[0])
-    else:
-        node3.increase_win_value(player[0])
-    player.reverse()
-
-print(node1, node1.get_score())
-print(node2, node2.get_score())
-print(node3, node3.get_score())
-
-print(selection(node))
-
-# n=Node(b, player[0])
-# p=monte_carlo(n, 2)
-# print(p.state)

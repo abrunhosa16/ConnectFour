@@ -1,7 +1,7 @@
 from connectFour import *
 from board import *
 
-def getLinePoints(line, player) -> int:
+def getLinePoints(line:int, player:str) -> int:
     opponent = 'X' if player == 'O' else 'O'
     if (line.count('X') != 0 and line.count('O') != 0): return 0
     
@@ -23,7 +23,7 @@ def getLinePoints(line, player) -> int:
     
     return 0
 
-def getPoints(board: Board, player: str) -> int:
+def getPoints(board:Board, player: str) -> int:
     win = board.finished()
     if win == 'X': return 512
     if win == 'O': return -512
@@ -50,7 +50,7 @@ def getPoints(board: Board, player: str) -> int:
 
     return points
 
-def Astar(node : Board, ai: str) -> list:
+def Astar(node:Board, ai:str) -> list:
     moves = possibleMoves(node, ai)
     points = getPoints(node, ai)
     best_move = [node, points, 0]
@@ -74,12 +74,11 @@ def Astar(node : Board, ai: str) -> list:
         
     return [best_move[0], best_move[2], best_move[3]]
 
-def gameAstar(board: Board, order):
+def gameAstar(board:Board, order:list):
     print(board)
     while True:
         print('Tua vez.')
-        turn, col, line = askForNextMove(board, order[0])
-        move(board, turn, col, line)
+        askForNextMove(board, order[0])
         print(board)
         
         #checks winner
