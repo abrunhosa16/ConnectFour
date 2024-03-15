@@ -21,15 +21,15 @@ def askForFirstPlayer() -> str:
 def askForAlgorithm() -> int:
     while True:
         try:
-            algorithm = int(input("Qual algoritmo queres? 1 - P vs P, 2 - A*, 3 - MC, 4 - MinMAx : "))
+            algorithm = int(input("Qual algoritmo queres? 1 - P vs P, 2 - A*, 3 - MC : "))
         except ValueError:
             print("Tente inteiros. \n")
             continue
 
-        if algorithm in range(1, 5, 1):
+        if algorithm in range(1, 4, 1):
             return algorithm
         else:
-            print('Tente um número de 1 a 4. \n')
+            print('Tente um número de 1 a 3. \n')
         
 def playAgain() -> bool:
     while True:
