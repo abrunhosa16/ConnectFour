@@ -1,8 +1,9 @@
 from copy import deepcopy
 
 class Board:
-    def __init__(self) -> None:
+    def __init__(self, player=None) -> None:
         self.board = []
+        self.player = player
 
         for i in range(6):
             row = []
@@ -34,6 +35,7 @@ class Board:
     
     def setPos(self, row:int, col:int, player:str) -> None:
         self.board[row][col] = player
+        self.player = 'X' if self.player == 'O' else 'O'
 
     def resetBoard(self) -> None:
         for row in range(6):
