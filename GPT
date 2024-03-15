@@ -155,37 +155,37 @@ def get_best_move(board, depth, alpha, beta, maximizing_player):
         return best_col, value
 
 # Main function to play Connect 4
-# def play_connect4():
-#     board = create_board()
-#     print_board(board)
-#     game_over = False
-#     turn = 0
+def play_connect4():
+    board = create_board()
+    print_board(board)
+    game_over = False
+    turn = 0
 
-#     while not game_over:
-#         # Player 1's turn
-#         if turn % 2 == 0:
-#             col = int(input("Player 1 Make your selection (0-6): "))
-#             if is_valid_location(board, col):
-#                 drop_piece(board, col, PLAYER1)
-#                 if winning_move(board, PLAYER1):
-#                     print("Player 1 wins!")
-#                     game_over = True
-#                 turn += 1
-#             else:
-#                 print("Invalid move. Try again.")
-#         # Player 2's turn
-#         else:
-#             col, minimax_score = get_best_move(board, 4, -float('inf'), float('inf'), True)
-#             drop_piece(board, col, PLAYER2)
-#             if winning_move(board, PLAYER2):
-#                 print("Player 2 wins!")
-#                 game_over = True
-#             turn += 1
+    while not game_over:
+        # Player 1's turn
+        if turn % 2 == 0:
+            col = int(input("Player 1 Make your selection (0-6): "))
+            if is_valid_location(board, col):
+                drop_piece(board, col, PLAYER1)
+                if winning_move(board, PLAYER1):
+                    print("Player 1 wins!")
+                    game_over = True
+                turn += 1
+            else:
+                print("Invalid move. Try again.")
+        # Player 2's turn
+        else:
+            col, minimax_score = get_best_move(board, 4, -float('inf'), float('inf'), True)
+            drop_piece(board, col, PLAYER2)
+            if winning_move(board, PLAYER2):
+                print("Player 2 wins!")
+                game_over = True
+            turn += 1
         
-#         print_board(board)
+        print_board(board)
 
-#         if is_board_full(board):
-#             print("It's a tie!")
-#             game_over = True
+        if is_board_full(board):
+            print("It's a tie!")
+            game_over = True
 
-# play_connect4()
+play_connect4()

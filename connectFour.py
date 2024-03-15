@@ -21,15 +21,15 @@ def askForFirstPlayer() -> str:
 def askForAlgorithm() -> int:
     while True:
         try:
-            algorithm = int(input("Qual algoritmo queres? 1 - P vs P, 2 - A*, 3 - MC : "))
+            algorithm = int(input("Qual algoritmo queres? 1 - P vs P, 2 - A*, 3 - MC, 4 - Minimax : "))
         except ValueError:
             print("Tente inteiros. \n")
             continue
 
-        if algorithm in range(1, 4, 1):
+        if algorithm in range(1, 5, 1):
             return algorithm
         else:
-            print('Tente um número de 1 a 3. \n')
+            print('Tente um número de 1 a 4. \n')
         
 def playAgain() -> bool:
     while True:
@@ -48,15 +48,13 @@ def testMove(board: Board, col) -> int:
             return 5 - i
     return -1
 
-def possibleMoves(board: Board, player:str) -> list:
+def possibleMoves(board: Board) -> list:
     # retorna os proximos estados
     acc = []
     for col in range(7):
         line = testMove(board, col)
         if line != -1:
-            cur = board.boardCopy()
-            cur.setPos(line, col, player)
-            acc.append((cur, line, col))
+            acc.append((line, col))
     return acc
 
 def askForNextMove(board:Board, turn:str) -> tuple:
@@ -78,8 +76,11 @@ def askForNextMove(board:Board, turn:str) -> tuple:
                 board.setPos(line, col, turn)
                 return (line, col)
 
-def winnerAi(board:Board, order:list) -> bool:
-    win = board.finished()
+def winnerAi(board:Board, order:list, move=None) -> bool:
+    if move:
+        win = board.finished_from(move[0], move[1])
+    else:
+        win = board.finished()
     if isinstance(win, str):
         if win == 'Tie':
             print('Empate.')

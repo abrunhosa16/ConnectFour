@@ -12,11 +12,10 @@ def winnerPvsP(board: Board, line:int, col:int) -> bool:
     return False
 
 def gamePvsP(board, order):
-    start_p, sec_p = order
     print(board)
     while True:   
         print('Primeiro jogador.')     
-        line, col = askForNextMove(board, start_p)
+        line, col = askForNextMove(board, board.player)
         print(board)
         
         #checks winner
@@ -24,7 +23,7 @@ def gamePvsP(board, order):
             return None
         
         print("Segundo Jogador.")
-        line, col = askForNextMove(board, sec_p)
+        line, col = askForNextMove(board, board.player)
         print(board)
         
         #checks winner

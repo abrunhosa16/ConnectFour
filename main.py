@@ -7,15 +7,17 @@ from min import *
 from connectFour import inputPlayer, askForFirstPlayer, askForAlgorithm, playAgain
 from PvsP import gamePvsP
 from astar import gameAstar
-from monteCarlo import game_monte_carlo
+from min import gameMiniMax
+from monteCarlo import gameMonteCarlo as game_monte_carlo
 
-board = Board()
+
 
 def main():
     play = True
+    order = inputPlayer(askForFirstPlayer())
+    board = Board(order[0])
     while play:
         board.resetBoard()
-        order = inputPlayer(askForFirstPlayer())
         game = askForAlgorithm()
         if game == 1:
             print("Escolhido Player vs Player.", end="\n")

@@ -1,5 +1,5 @@
 from board import Board
-from connectFour import possibleMoves
+from connectFour import askForNextMove, winnerAi, possibleMoves
 from numpy import sqrt, log as ln
 from copy import deepcopy
 import random
@@ -64,7 +64,7 @@ class MCTS:
         return node
 
     def expand(self, node:Node) -> Node:
-        child_states = [child_state for child_state, *_ in possibleMoves(node.state, node.state.player)]
+        child_states = [child_state for child_state, *_ in possibleMoves(node.state)]
         for child_state in child_states:
             node.add_child(Node(child_state))
         return random.choice(node.children)
@@ -95,11 +95,23 @@ class MCTS:
             self.back_propagation(expanded, result)
         return self.best_child()
 
-b = Board('X')
-b.setPos(5,3,'X')
-n = Node(b)
-m = MCTS(n)
-best = m.search(10)
-print(m.best_child())
-
-
+def gameMonteCarlo(board:Board, order):
+    print(board)
+    m =MCTS(board)
+    while True:
+        print('Tua vez.')
+        askForNextMove(board, board.player)
+        m.root = Node(board)
+        print(board)
+        
+        #checks winner
+        if winnerAi(board, order):
+            return None
+        
+        board = m.search(20).state
+        m.root = Node(board)
+        print(board)
+        
+        #checks winner
+        if winnerAi(board, order):
+            return None
