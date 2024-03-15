@@ -1,36 +1,32 @@
 from board import *
 from connectFour import *
 
-def gamePvsP(board,start_p, sec_p):
-    while True:        
-        print(board)
-        # #checks if there is winner
-        win = winner(board)
-        if not isinstance(win, bool):
-            print(board)
-            if win == 'Tie':
-                print('Empate')
-            else:
-                print('Winner is ' + win)
-            return win
+def winnerPvsP(board: Board, line:int, col:int) -> bool:
+    win = board.finished_from(line, col)
+    if isinstance(win, str):
+        if win == 'Tie':
+            print('Empate')
+        else:
+            print('O vencedor é ' + win + '.')
+        return True
+    return False
 
-        print("First Player")
-        #gamePerson(board, start_p)
-        turn, col, line = askForNextMove(board, start_p)
-        move(board, turn, col, line)
+def gamePvsP(board, order):
+    start_p, sec_p = order
+    print(board)
+    while True:   
+        print('Primeiro jogador.')     
+        line, col = askForNextMove(board, start_p)
         print(board)
-
-        # #checks if there is winner
-        win = winner(board)
-        if not isinstance(win, bool):
-            if win == 'Tie': 
-                print(win)
-            print(board)
-            print('Winner is ' + win)
-            return win
-        print(possibleMoves(board))
         
-        print("Second Player")
-        #gamePerson(board, sec_p)
-        turn, col, line = askForNextMove(board, sec_p)
-        move(board, turn, col, line)
+        #checks winner
+        if winnerPvsP(board, line, col):
+            return None
+        
+        print("Segundo Jogador.")
+        line, col = askForNextMove(board, sec_p)
+        print(board)
+        
+        #checks winner
+        if winnerPvsP(board, line, col):
+            return None
