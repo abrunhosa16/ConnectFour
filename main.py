@@ -3,6 +3,7 @@ from connectFour import *
 from PvsP import * 
 from astar import *
 from monteCarlo import *
+from min import *
 
 board = Board()
 
@@ -26,6 +27,9 @@ def main():
             gameAstar(board, start_p)
         if game == 3:
             print("Escolhido MonteCarlo", end="\n")
+        if game == 4:
+            print("Escolhido Minimax", end='\n')
+            gameMiniMax(board, start_p)
 
         play = playAgain()
 

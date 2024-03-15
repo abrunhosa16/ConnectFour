@@ -25,15 +25,15 @@ def askForFirstPlayer():
 def askForAlgorithm():
     while True:
         try:
-            algorithm = int(input("Qual algoritmo queres? 1 - P vs P, 2 - A*, 3 - MC : "))
+            algorithm = int(input("Qual algoritmo queres? 1 - P vs P, 2 - A*, 3 - MC, 4 - MinMAx : "))
         except ValueError:
             print("Tente inteiros. \n")
             continue
 
-        if algorithm in range(1, 4, 1):
+        if algorithm in range(1, 5, 1):
             return algorithm
         else:
-            print('Tente um número de 1 a 3. \n')
+            print('Tente um número de 1 a 4. \n')
         
 def playAgain():
     while True:
@@ -52,6 +52,9 @@ def testMoveValidity(board: Board, col) -> int | bool:
         if board.getPos(5-i, col) == "-":
             return 5 - i
     return -1
+
+def fullyBoard(board):
+    return all(board[0][col] != '-' for col in range(7))
 
 def testMove(board: Board, col) -> bool | int:
 
