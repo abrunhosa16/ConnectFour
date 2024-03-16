@@ -154,8 +154,7 @@ def gameMonteCarlo(board:Board, order):
         #checks winner
         if winnerAi(board, order):
             return None
-        
-        
+          
 gameMonteCarlo(Board('X'), ['X', 'O'])
 
 # b = Board('X')
