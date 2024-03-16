@@ -34,7 +34,7 @@ class Board:
         return self.board[row][col]
     
     def setPos(self, row:int, col:int, player:str) -> None:
-        self.board[row][col] = player
+        self.board[row][col] = self.player
         self.player = 'X' if self.player == 'O' else 'O'
 
     def resetBoard(self) -> None:
@@ -46,6 +46,7 @@ class Board:
         # se faz uma copia do tabuleiro no estado atual
         copy = Board()
         copy.board = deepcopy(self.board)
+        copy.player = self.player
         return copy
     
     def finished(self) -> str | bool:

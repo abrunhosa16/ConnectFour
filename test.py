@@ -9,7 +9,7 @@ def test_game(board: Board):
     order = ['X', 'O']
     while True:
         print('Minimax.')
-        (line, col), *_ = bestMove(board, 7, float('-inf'), float('inf'), True, order)
+        (line, col), *_ = bestMove(board, 8, float('-inf'), float('inf'), True, order)
         board.setPos(line, col, order[0])
         print(board)
         
