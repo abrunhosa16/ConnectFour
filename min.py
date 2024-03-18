@@ -52,23 +52,8 @@ def bestMove(board:Board , depth:int , alpha, beta, maximizing:bool , order:list
         return None, score_position(board, order[1])
 
     if maximizing:
-        max_value = float('-inf')
-        best_move = None
-
-        for line, col in possible_moves:
-            copy = board.boardCopy()
-            copy.setPos(line, col, order[1])
-            _, new_score = bestMove(copy, depth - 1, alpha, beta, False, order)
-
-            if new_score > max_value:
-                max_value = new_score
-                best_move = (line, col)
-            alpha = max(alpha, max_value)
-
-            if alpha >= beta:
-                break
-
-        return best_move, max_value
+        maxValue(board, depth, alpha, beta, maximizing, order, possible_moves)
+        
 
     else:
         min_value = float('inf')
@@ -88,7 +73,45 @@ def bestMove(board:Board , depth:int , alpha, beta, maximizing:bool , order:list
                 break
 
         return best_move, min_value
+    
+def maxValue(board:Board , depth:int , alpha, beta, maximizing:bool , order:list, possible_moves):
+    max_value = float('-inf')
+    best_move = None
 
+    for line, col in possible_moves:
+        copy = board.boardCopy()
+        copy.setPos(line, col, order[1])
+        _, new_score = bestMove(copy, depth - 1, alpha, beta, False, order)
+
+        if new_score > max_value:
+            max_value = new_score
+            best_move = (line, col)
+        alpha = max(alpha, max_value)
+
+        if alpha >= beta:
+            break
+
+    return best_move, max_value
+
+def minValue(board:Board , depth:int , alpha, beta, maximizing:bool , order:list, possible_moves):
+    min_value = float('inf')
+    best_move = None
+
+    for line, col in possible_moves:
+        copy = board.boardCopy()
+        copy.setPos(line, col, order[0])
+        _, new_score = bestMove(copy, depth - 1, alpha, beta, True, order)
+
+        if new_score < min_value:
+            min_value = new_score
+            best_move = (line, col)
+        beta = min(beta, min_value)
+
+        if alpha >= beta:
+            break
+
+        return best_move, min_value
+    
 def gameMiniMax(board: Board, order:list):
     print(board)
     while True:
