@@ -10,7 +10,7 @@ class Node:
         self.state = state
         self.parent = None
         self.children = []
-        self.c = 100
+        self.c = 1
         self.visits = 0
         self.wins = 0
     
@@ -25,6 +25,7 @@ class Node:
         string += "Total: " + str(self.visits) + '\n'
         string += "Constante: " + str(self.c) + '\n'
         string += "Pontuação: " + str(self.uct()) + '\n'
+        string += "Probabilidade de vitória: " + str(self.win_probability()) + '\n'
         return string
     
     def copy(self):
@@ -54,6 +55,9 @@ class Node:
         exploration = self.c * sqrt(2 * ln(self.parent.visits) / self.visits) if self.parent else 0
         return exploitation + exploration
     
+    def win_probability(self) -> float:
+        return self.wins /self.visits
+    
 class MCTS:
     def __init__(self, root:Node) -> None:
         self.root = root
@@ -77,12 +81,20 @@ class MCTS:
                 best_child.append(child)
         return random.choice(best_child)
     
-    def update_state(self, state) -> None:
+    def winner(self):
+        best_child = []
+        best_score = float('-inf')
+
         for child in self.root.children:
-            if child.state == state:
-                self.root = child
-                self.root.parent = None
-                return 
+            score = child.win_probability()
+            if score > best_score:
+                best_child = [child]
+                best_score = score
+            elif score == best_score:
+                best_child.append(child)
+        return random.choice(best_child)
+
+    def update_state(self, state) -> None:
         self.root = Node(state)
         
     def select(self) -> Node:
@@ -97,12 +109,7 @@ class MCTS:
         for line, col in child_moves:
             child_state = node.state.boardCopy()
             child_state.setPos(line, col, child_state.player)
-            if len(node.children) > 0:
-                for child in node.children:
-                    if child_state != child.state:
-                        node.add_child(Node(child_state))
-            else:
-                node.add_child(Node(child_state))
+            node.add_child(Node(child_state))
         return random.choice(node.children)
         
     def rollout(self, node:Node) -> str:
@@ -119,20 +126,21 @@ class MCTS:
     def back_propagation(self, node:Node, winner_symbol:str) -> None:
         while node:
             node.visits += 1
-            if winner_symbol == node.state.player:
+            if winner_symbol != node.state.player and winner_symbol != 'Tie':
                 node.wins += 1
             node = node.parent
 
     def search(self, max_time:int) -> Node:
         start_time = time.time()
-        # while time.time() - start_time < max_time:
+        count = 0
         while time.time() - start_time < max_time:
-            
+            count += 1
             selected = self.select()
             expanded = self.expand(selected)
             result = self.rollout(expanded)
             self.back_propagation(expanded, result)
-        return self.best_child()
+        print('Foram feitas ' + str(count) + ' simulações.')
+        return self.winner()
 
 def gameMonteCarlo(board:Board, order):
     print(board)
@@ -154,27 +162,3 @@ def gameMonteCarlo(board:Board, order):
         #checks winner
         if winnerAi(board, order):
             return None
-          
-
-# b = Board('X')
-# b.setPos(5,3,'X')
-# b.setPos(5,2,'O')
-# b.setPos(5,4,'X')
-# b.setPos(4,3,'O')
-# b.setPos(5,5,'X')
-# m = MCTS(Node(b))
-# child = m.search(10)
-
-# for c in m.root.children:
-#     print(c.visits)
-# print(child.state)
-
-# p = Node(b)
-# for line, col in possibleMoves(b):
-#     copy = b.boardCopy()
-#     copy.setPos(line, col, 'O')
-#     p.add_child(Node(copy))
-# node = p
-# while len(node.children) > 0:
-#     node = random.choice(node.child)
-#     print(1)
