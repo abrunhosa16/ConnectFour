@@ -105,7 +105,13 @@ class MCTS:
         return node
 
     def expand(self, node:Node) -> Node:
+        if isinstance(node.state.finished(), str): #se o expandido for vencedor
+            return node.state.finished()
         child_moves = possibleMoves(node.state)
+        if len(child_moves) == 0:
+            print(node.state)
+            print('--------ERRO--------')
+
         for line, col in child_moves:
             child_state = node.state.boardCopy()
             child_state.setPos(line, col, child_state.player)
@@ -136,9 +142,14 @@ class MCTS:
         while time.time() - start_time < max_time:
             count += 1
             selected = self.select()
-            expanded = self.expand(selected)
-            result = self.rollout(expanded)
-            self.back_propagation(expanded, result)
+            result = selected.state.finished()
+            if isinstance(result, bool):
+                expanded = self.expand(selected)
+                result = self.rollout(expanded)
+                self.back_propagation(expanded, result)
+            else:
+                self.back_propagation(selected, result)
+            
         print('Foram feitas ' + str(count) + ' simulações.')
         return self.winner()
 

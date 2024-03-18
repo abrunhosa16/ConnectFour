@@ -56,7 +56,6 @@ def bestMove(board:Board , depth:int , alpha, beta, maximizing:bool , order:list
             copy = board.boardCopy()
             copy.setPos(line, col, order[1])
             _, new_score = bestMove(copy, depth - 1, alpha, beta, False, order)
-            print(new_score)
 
             if new_score > max_value:
                 max_value = new_score
