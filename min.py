@@ -15,10 +15,7 @@ def scoreLine(line:list , player:str) -> int:
     
     if line.count(player) == 0 and line.count('-') == 0:
         score -= 100
-    if line.count(player) == 0 and line.count('-') == 1:
-        score -= 8
-    if line.count(player) == 0 and line.count('-') == 2:
-        score -= 4
+
 
     return score  
 
@@ -52,65 +49,74 @@ def bestMove(board:Board , depth:int , alpha, beta, maximizing:bool , order:list
         return None, score_position(board, order[1])
 
     if maximizing:
-        maxValue(board, depth, alpha, beta, maximizing, order, possible_moves)
-        
-
-    else:
-        min_value = float('inf')
+        max_value = float('-inf')
         best_move = None
 
         for line, col in possible_moves:
             copy = board.boardCopy()
-            copy.setPos(line, col, order[0])
-            _, new_score = bestMove(copy, depth - 1, alpha, beta, True, order)
+            copy.setPos(line, col, order[1])
+            _, new_score = bestMove(copy, depth - 1, alpha, beta, False, order)
+            print(new_score)
 
-            if new_score < min_value:
-                min_value = new_score
+            if new_score > max_value:
+                max_value = new_score
                 best_move = (line, col)
-            beta = min(beta, min_value)
+            alpha = max(alpha, max_value)
 
             if alpha >= beta:
                 break
-
-        return best_move, min_value
-    
-def maxValue(board:Board , depth:int , alpha, beta, maximizing:bool , order:list, possible_moves):
-    max_value = float('-inf')
-    best_move = None
-
-    for line, col in possible_moves:
-        copy = board.boardCopy()
-        copy.setPos(line, col, order[1])
-        _, new_score = bestMove(copy, depth - 1, alpha, beta, False, order)
-
-        if new_score > max_value:
-            max_value = new_score
-            best_move = (line, col)
-        alpha = max(alpha, max_value)
-
-        if alpha >= beta:
-            break
-
-    return best_move, max_value
-
-def minValue(board:Board , depth:int , alpha, beta, maximizing:bool , order:list, possible_moves):
-    min_value = float('inf')
-    best_move = None
+        return best_move, max_value
+        
+    else:
+        min_value = float('inf')
+        best_move = None
 
     for line, col in possible_moves:
         copy = board.boardCopy()
         copy.setPos(line, col, order[0])
         _, new_score = bestMove(copy, depth - 1, alpha, beta, True, order)
-
         if new_score < min_value:
             min_value = new_score
             best_move = (line, col)
         beta = min(beta, min_value)
-
         if alpha >= beta:
             break
+    return best_move, min_value
+    
+# def maxValue(board:Board , depth:int , alpha, beta, maximizing:bool , order:list, possible_moves):
+#     max_value = float('-inf')
+#     best_move = None
 
-        return best_move, min_value
+#     for line, col in possible_moves:
+#         copy = board.boardCopy()
+#         copy.setPos(line, col, order[1])
+#         print(bestMove(copy, depth, alpha, beta, False, order))
+#         _, new_score = bestMove(copy, depth - 1, alpha, beta, False, order)
+
+#         if new_score > max_value:
+#             max_value = new_score
+#             best_move = (line, col)
+#         alpha = max(alpha, max_value)
+
+#         if alpha >= beta:
+#             break
+#     return best_move, max_value
+
+# def minValue(board:Board , depth:int , alpha, beta, maximizing:bool , order:list, possible_moves):
+#     min_value = float('inf')
+#     best_move = None
+
+#     for line, col in possible_moves:
+#         copy = board.boardCopy()
+#         copy.setPos(line, col, order[0])
+#         _, new_score = bestMove(copy, depth - 1, alpha, beta, True, order)
+#         if new_score < min_value:
+#             min_value = new_score
+#             best_move = (line, col)
+#         beta = min(beta, min_value)
+#         if alpha >= beta:
+#             break
+#     return best_move, min_value
     
 def gameMiniMax(board: Board, order:list):
     print(board)
