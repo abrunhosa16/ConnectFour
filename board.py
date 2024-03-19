@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 class Board:
-    def __init__(self, player=None) -> None:
+    def __init__(self , player=None) -> None:
         self.board = []
         self.player = player
 
@@ -21,19 +21,19 @@ class Board:
             string += ' '.join(self.board[row]) + '\n'
         return string
     
-    def __eq__(self, other) -> bool:
+    def __eq__(self , other) -> bool:
         for row in range(6):
             if self.board[row] != other.getRow(row):
                 return False
         return True    
     
-    def getRow(self, row:int) -> list:
+    def getRow(self , row:int) -> list:
         return self.board[row]
     
-    def getPos(self, row:int, col:int) -> str:
+    def getPos(self , row:int , col:int) -> str:
         return self.board[row][col]
     
-    def setPos(self, row:int, col:int, player:str) -> None:
+    def setPos(self , row:int , col:int) -> None:
         self.board[row][col] = self.player
         self.player = 'X' if self.player == 'O' else 'O'
 
@@ -75,7 +75,7 @@ class Board:
                     if (line.count('-') == 0): return 'Tie'
         return False
 
-    def finished_from(self, row:int, col:int) -> str | bool:
+    def finished_from(self, row:int, col:int) -> str | bool: #algo está mal
         #verifica apenas as linhas que incluem a casa onde foi jogada uma peça
         if self.getRow(0).count('-') == 0:
             return 'Tie'

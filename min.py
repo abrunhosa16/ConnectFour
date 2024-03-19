@@ -72,7 +72,7 @@ def bestMove(board:Board , depth:int , alpha, beta, maximizing:bool , order:list
 
         for line, col in possible_moves:
             copy = board.boardCopy()
-            copy.setPos(line, col, order[1])
+            copy.setPos(line, col)
             _, new_score = bestMove(copy, depth - 1, alpha, beta, False, order)
 
             if new_score > max_value:
@@ -90,7 +90,7 @@ def bestMove(board:Board , depth:int , alpha, beta, maximizing:bool , order:list
 
     for line, col in possible_moves:
         copy = board.boardCopy()
-        copy.setPos(line, col, order[0])
+        copy.setPos(line, col)
         _, new_score = bestMove(copy, depth - 1, alpha, beta, True, order)
         if new_score < min_value:
             min_value = new_score
@@ -105,11 +105,11 @@ def gameMiniMax(board: Board, order:list):
     print(board)
     while True:
         # print('Tua vez.')
-        # line, col = askForNextMove(board, board.player)
+        # line, col = askForNextMove(board)
         # print(board)
 
         (line, col), *_ = bestMove(board, 6, float('-inf'), float('inf'), False, order)
-        board.setPos(line, col, board.player)
+        board.setPos(line, col)
         print('A IA 1 pôs uma peça na coluna ' + str(col) + '.')
         print(board)
         
@@ -118,7 +118,7 @@ def gameMiniMax(board: Board, order:list):
             return None
         
         (line, col), *_ = bestMove(board, 4, float('-inf'), float('inf'), True, order)
-        board.setPos(line, col, board.player)
+        board.setPos(line, col)
         print('A IA 2 pôs uma peça na coluna ' + str(col) + '.')
         print(board)
         

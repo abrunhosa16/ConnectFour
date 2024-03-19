@@ -1,7 +1,7 @@
-from connectFour import *
-from board import *
+from connectFour import possibleMoves, askForNextMove, winnerAi
+from board import Board
 
-def getLinePoints(line:int, player:str) -> int:
+def getLinePoints(line:int , player:str) -> int:
     opponent = 'X' if player == 'O' else 'O'
     if (line.count('X') != 0 and line.count('O') != 0): 
         return 0
@@ -30,7 +30,7 @@ def getLinePoints(line:int, player:str) -> int:
     
     return 0
 
-def getPoints(board:Board, player: str) -> int:
+def getPoints(board:Board , player: str) -> int:
     win = board.finished()
     if win == 'X': return 512
     if win == 'O': return -512
@@ -58,24 +58,26 @@ def getPoints(board:Board, player: str) -> int:
 
     return points
 
-def Astar(state:Board, ai:str) -> list:
+def Astar(state:Board) -> list:
+    ai = state.player
     moves = possibleMoves(state)
     best_move = [state, getPoints(state, ai), -1, -1]
     
     for line, col in moves:
-        #simula cada jogada
         new_state = state.boardCopy()
-        new_state.setPos(line, col, ai)
+        new_state.setPos(line, col)
         new_state_points = getPoints(new_state, ai)
         
         if ai == 'X':
             if new_state_points == 512:
                 return [new_state, line, col]
+            
             if new_state_points > best_move[1]:
                 best_move = [new_state, new_state_points, line, col]
         else:
             if new_state_points == -512:
                 return [new_state, line, col]
+            
             if new_state_points < best_move[1]:
                 best_move = [new_state, new_state_points, line, col]
     
@@ -85,21 +87,20 @@ def Astar(state:Board, ai:str) -> list:
         
     return [best_move[0], best_move[2], best_move[3]]
 
-def gameAstar(board:Board, order:list):
+def gameAstar(board:Board , order:list) -> None:
     print(board)
     while True:
         print('Tua vez.')
-        line, col = askForNextMove(board, board.player)
+        line, col = askForNextMove(board)
         print(board)
         
-        #checks winner
         if winnerAi(board, order, (line, col)):
-            return None
+            return
         
-        board, line, col = Astar(board, board.player)
-        print('A IA 2 pôs uma peça na coluna ' + str(col) + '.')
+        board, line, col = Astar(board)
+        print('A IA pôs uma peça na coluna ' + str(col) + '.')
         print(board)
         
-        #checks winner
-        if winnerAi(board, order, (line, col)):
-            return None
+        if winnerAi(board, order):
+            return
+       
