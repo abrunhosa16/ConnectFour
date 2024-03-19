@@ -7,9 +7,9 @@ from monteCarlo import gameMonteCarlo
 
 def main():
     play = True
-    order = askForFirstPlayer()
-    board = Board(order[0])
     while play:
+        order = askForFirstPlayer()
+        board = Board(order[0])
         board.resetBoard()
         game = askForAlgorithm()
         if game == 1:
