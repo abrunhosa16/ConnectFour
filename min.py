@@ -48,7 +48,7 @@ def score_position(board:Board , player:str, n) -> int:
                 points += scoreLine( [board.getPos(line - i, col + i) for i in range(4)], player, n)
     return points
 
-def heuristica(board, player):
+def heuristica(board:Board, player:str) -> int:
     order = inputPlayer(player)
     central = 10 * (centrais(board, order[0], 4) - centrais(board, order[1], 4))
     neigh_center = 8 * centrais(board, order[0], 3) - centrais(board, order[1], 3)
