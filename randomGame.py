@@ -3,5 +3,5 @@ from connectFour import possibleMoves
 import random
 
 def randomGame(board:Board):
-    line, col = random.choce(possibleMoves(board))
-    board.setPos(line, col, board.player)
+    line, col = random.choice(possibleMoves(board))
+    board.setPos(line, col)

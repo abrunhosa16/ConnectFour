@@ -1,13 +1,13 @@
 from copy import deepcopy
 
 class Board:
-    def __init__(self, player=None) -> None:
+    def __init__(self , player=None) -> None:
         self.board = []
         self.player = player
 
-        for i in range(6):
+        for _ in range(6):
             row = []
-            for j in range(7):
+            for _ in range(7):
                 row.append('-')
             self.board.append(row)
         
@@ -21,19 +21,19 @@ class Board:
             string += ' '.join(self.board[row]) + '\n'
         return string
     
-    def __eq__(self, other) -> bool:
+    def __eq__(self , other) -> bool:
         for row in range(6):
             if self.board[row] != other.getRow(row):
                 return False
         return True    
     
-    def getRow(self, row:int) -> list:
+    def getRow(self , row:int) -> list:
         return self.board[row]
     
-    def getPos(self, row:int, col:int) -> str:
+    def getPos(self , row:int , col:int) -> str:
         return self.board[row][col]
     
-    def setPos(self, row:int, col:int, player:str) -> None:
+    def setPos(self , row:int , col:int) -> None:
         self.board[row][col] = self.player
         self.player = 'X' if self.player == 'O' else 'O'
 
@@ -73,54 +73,4 @@ class Board:
                 if (row == 0):
                     line = self.getRow(row)
                     if (line.count('-') == 0): return 'Tie'
-        return False
-
-    def finished_from(self, row:int, col:int) -> str | bool:
-        #verifica apenas as linhas que incluem a casa onde foi jogada uma peça
-        if self.getRow(0).count('-') == 0:
-            return 'Tie'
-        
-        #horizontal
-        limits_col = [max(0, col-3), min(6, col+3)]
-        sequence = [self.getPos(row, limits_col[0]), 0]
-        for i in range(limits_col[0], limits_col[1] + 1, 1):
-            if self.getPos(row, i) != sequence[0]:
-                sequence = [self.getPos(row, i), 1]
-            else:
-                sequence[1] += 1
-            if (sequence[1] == 4 and sequence[0] != '-'):
-                return self.getPos(row, col)
-            
-        #vertical
-        limits_row = [max(0, row-3), min(5, row+3)]
-        sequence = [self.getPos(row, limits_row[0]), 0]
-        for i in range(limits_row[0], limits_row[1] + 1, 1):
-            if self.getPos(i, col) != sequence[0]:
-                sequence = [self.getPos(i, col), 1]
-            else:
-                sequence[1] += 1
-            if (sequence[1] == 4 and sequence[0] != '-'):
-                return self.getPos(row, col)
-            
-        #vertical e-d c-b
-        interval = min(limits_row[1] - limits_row[0], limits_col[1] - limits_col[0]) #numero de casas da diagonal a ver
-        sequence = [self.getPos(limits_row[0], limits_col[0]), 0]
-        for i in range(interval):
-            if self.getPos(limits_row[0] + i, limits_col[0] + i) != sequence[0]:
-                sequence = [self.getPos(limits_row[0] + i, limits_col[0] + i), 1]
-            else:
-                sequence[1] += 1
-            if (sequence[1] == 4 and sequence[0] != '-'):
-                return self.getPos(row, col)
-            
-        #vertical e-d b-c
-        sequence = [self.getPos(limits_row[0], limits_col[0]), 0]
-        for i in range(interval):
-            if self.getPos(limits_row[1] - i, limits_col[0] + i) != sequence[0]:
-                sequence = [self.getPos(limits_row[1] - i, limits_col[0] + i), 1]
-            else:
-                sequence[1] += 1
-            if (sequence[1] == 4 and sequence[0] != '-'):
-                return self.getPos(row, col)
-        
         return False

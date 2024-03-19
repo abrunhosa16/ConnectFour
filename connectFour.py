@@ -1,22 +1,23 @@
 import random
 from board import Board
 
-def inputPlayer(letter:str) -> list:
+def inputPlayer(letter:str) -> list: #pode ser removido, basta ver o pq de ser usado no min.py
     #retorna lista com a ordem do jogador
     if letter == 'X':
         return ['X', 'O']
     else:
         return ['O', 'X']
 
-def askForFirstPlayer() -> str:
-    valid = False
-    while not valid:
+def askForFirstPlayer() -> list:
+    while True:
         piece = input("Queres ser X, O or R? ")
-        if piece.upper() == "X" or piece.upper() == "O":
-            return piece.upper()
+        if piece.upper() == "X":
+            return ['X', 'O']
+        elif piece.upper() == "O":
+            return ['O', 'X']
         elif piece.upper() == "R":
             m = random.randint(0, 1)
-            return "X" if m == 0 else "O"
+            return ['X', 'O'] if m == 0 else ['O', 'X']
 
 def askForAlgorithm() -> int:
     while True:
@@ -41,15 +42,14 @@ def playAgain() -> bool:
         else:
             print('Tente S ou N. \n')
 
-def testMove(board: Board, col) -> int:
+def testMove(board:Board , col:int) -> int:
     #-1 se não é possível
     for i in range(6):
         if board.getPos(5-i, col) == "-":
             return 5 - i
     return -1
 
-def possibleMoves(board: Board) -> list:
-    # retorna os proximos estados
+def possibleMoves(board:Board) -> list:
     acc = []
     for col in range(7):
         line = testMove(board, col)
@@ -57,7 +57,7 @@ def possibleMoves(board: Board) -> list:
             acc.append((line, col))
     return acc
 
-def askForNextMove(board:Board, turn:str) -> tuple:
+def askForNextMove(board:Board) -> tuple:
     while True:
         try:
             col = int(input("Em qual coluna? "))
@@ -73,14 +73,11 @@ def askForNextMove(board:Board, turn:str) -> tuple:
             if line == -1:
                 print("Coluna cheia.")
             else:
-                board.setPos(line, col, turn)
+                board.setPos(line, col)
                 return (line, col)
 
-def winnerAi(board:Board, order:list, move=None) -> bool:
-    if move:
-        win = board.finished_from(move[0], move[1])
-    else:
-        win = board.finished()
+def winnerAi(board:Board , order:list) -> bool: 
+    win = board.finished()
     if isinstance(win, str):
         if win == 'Tie':
             print('Empate.')
