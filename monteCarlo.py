@@ -1,7 +1,6 @@
 from board import Board
 from connectFour import askForNextMove, winnerAi, possibleMoves
 from numpy import sqrt, log as ln
-from copy import deepcopy
 import random
 import time
 
@@ -51,7 +50,7 @@ class MCTS:
     def __init__(self , root:Node) -> None:
         self.root = root
 
-    def best_child(self , node) -> Node:
+    def best_child(self , node:Node) -> Node:
         best_child = []
         best_score = float('-inf')
         for child in node.children:
@@ -80,7 +79,6 @@ class MCTS:
         
     def select(self) -> Node:
         node = self.root
-
         while len(node.children) > 0:
             node = self.best_child(node)
         return node
@@ -88,11 +86,6 @@ class MCTS:
     def expand(self , node:Node) -> Node:
         child_moves = possibleMoves(node.state)
         
-        #para detetar erro de seleçao
-        if len(child_moves) == 0:
-            print(node.state)
-            print('--------ERRO--------')
-
         for line, col in child_moves:
             child_state = node.state.boardCopy()
             child_state.setPos(line, col)
@@ -127,9 +120,7 @@ class MCTS:
             if isinstance(result, bool): 
                 expanded = self.expand(selected)
                 result = self.rollout(expanded)
-                self.back_propagation(expanded, result)
-            else: #se o nó selecionado for terminal
-                self.back_propagation(selected, result)
+            self.back_propagation(selected, result)
             
         print('Foram feitas ' + str(simulations) + ' simulações.')
         return self.biggest_win_probability()
@@ -147,7 +138,6 @@ def gameMonteCarlo(board:Board , order:list) -> None:
             return
         
         board = m.search(10).state
-        m.update_state(board)
         print(board)
         
         if winnerAi(board, order):

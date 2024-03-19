@@ -1,8 +1,10 @@
 from min import bestMove
 import time
 from board import Board
+from astar import Astar
 from connectFour import winnerAi
 from monteCarlo import MCTS, Node
+from randomGame import randomGame
 
 def test_game(board: Board):
     print(board)
@@ -10,23 +12,21 @@ def test_game(board: Board):
     order = ['X', 'O']
     while True:
         
-        print('Minimax')
-        (lin, col), *_ = bestMove(board, 7, float('-inf'), float('inf'), False, order)
-        board.setPos(lin, col, board.player)
-        m.root = Node(board)
+        print('A*')
+        board, *_ = Astar(board)
         print(board)
         
         #checks winner
         if winnerAi(board, order):
             return None
         
-        print('Monte Carlo')
-        board = m.search(10).state
-        m.update_state(board)
+        time.sleep(1)
+        
+        print('Random')
+        randomGame(board)
         print(board)
         
         #checks winner
         if winnerAi(board, order):
             return None
         
-test_game(Board('X'))

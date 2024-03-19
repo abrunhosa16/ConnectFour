@@ -1,21 +1,23 @@
 import random
 from board import Board
 
-def inputPlayer(letter:str) -> list:
+def inputPlayer(letter:str) -> list: #pode ser removido, basta ver o pq de ser usado no min.py
     #retorna lista com a ordem do jogador
     if letter == 'X':
         return ['X', 'O']
     else:
         return ['O', 'X']
 
-def askForFirstPlayer() -> str:
+def askForFirstPlayer() -> list:
     while True:
         piece = input("Queres ser X, O or R? ")
-        if piece.upper() == "X" or piece.upper() == "O":
-            return piece.upper()
+        if piece.upper() == "X":
+            return ['X', 'O']
+        elif piece.upper() == "O":
+            return ['O', 'X']
         elif piece.upper() == "R":
             m = random.randint(0, 1)
-            return "X" if m == 0 else "O"
+            return ['X', 'O'] if m == 0 else ['O', 'X']
 
 def askForAlgorithm() -> int:
     while True:
@@ -75,9 +77,6 @@ def askForNextMove(board:Board) -> tuple:
                 return (line, col)
 
 def winnerAi(board:Board , order:list) -> bool: 
-    # if move:
-    #     win = board.finished_from(move[0], move[1])
-    # else:
     win = board.finished()
     if isinstance(win, str):
         if win == 'Tie':
