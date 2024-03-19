@@ -11,7 +11,7 @@ def test_game(board: Board):
     while True:
         
         print('Minimax')
-        (lin, col), *_ = bestMove(board, 5, float('-inf'), float('inf'), False, order)
+        (lin, col), *_ = bestMove(board, 7, float('-inf'), float('inf'), False, order)
         board.setPos(lin, col, board.player)
         m.root = Node(board)
         print(board)

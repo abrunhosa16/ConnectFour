@@ -105,8 +105,6 @@ class MCTS:
         return node
 
     def expand(self, node:Node) -> Node:
-        if isinstance(node.state.finished(), str): #se o expandido for vencedor
-            return node.state.finished()
         child_moves = possibleMoves(node.state)
         if len(child_moves) == 0:
             print(node.state)
