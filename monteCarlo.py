@@ -127,7 +127,7 @@ class MCTS:
 
 def gameMonteCarlo(board:Board , order:list) -> None:
     print(board)
-    m = MCTS(board)
+    m = MCTS(Node(board))
     while True:
         print('Tua vez.')
         askForNextMove(board)

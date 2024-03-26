@@ -50,27 +50,26 @@ class Board:
         return copy
     
     def finished(self) -> str | bool:
-        for row in range(6):
+        for line in range(6):
             for col in range(7):
-                
+                if (line == 0):
+                    row = self.getRow(line)
+                    if (row.count('-') == 0): return 'Tie'
+                    
                 #horizontal
                 if col <= 3:
-                    if (self.getPos(row, col) == self.getPos(row, col + 1) == self.getPos(row, col + 2) == self.getPos(row, col + 3) and self.getPos(row, col) != '-'):
-                        return self.getPos(row, col)
+                    if (self.getPos(line, col) == self.getPos(line, col + 1) == self.getPos(line, col + 2) == self.getPos(line, col + 3) and self.getPos(line, col) != '-'):
+                        return self.getPos(line, col)
                 #vertical
-                if row <= 2:
-                    if (self.getPos(row, col) == self.getPos(row + 1, col) == self.getPos(row + 2, col) == self.getPos(row + 3, col) and self.getPos(row, col) != '-'):
-                        return self.getPos(row, col)
+                if line <= 2:
+                    if (self.getPos(line, col) == self.getPos(line + 1, col) == self.getPos(line + 2, col) == self.getPos(line + 3, col) and self.getPos(line, col) != '-'):
+                        return self.getPos(line, col)
                 #diagonal
-                if (col <= 3 and row <= 2):
-                    if (self.getPos(row, col) == self.getPos(row + 1, col + 1) == self.getPos(row + 2, col + 2) == self.getPos(row + 3, col + 3) and self.getPos(row, col) != '-'):
-                        return self.getPos(row, col)
+                if (col <= 3 and line <= 2):
+                    if (self.getPos(line, col) == self.getPos(line + 1, col + 1) == self.getPos(line + 2, col + 2) == self.getPos(line + 3, col + 3) and self.getPos(line, col) != '-'):
+                        return self.getPos(line, col)
                 #diagonal
-                if (col <= 3 and row >= 3):
-                    if (self.getPos(row, col) == self.getPos(row - 1, col + 1) == self.getPos(row - 2, col + 2) == self.getPos(row - 3, col + 3) and self.getPos(row, col) != '-'):
-                        return self.getPos(row, col)
-                    
-                if (row == 0):
-                    line = self.getRow(row)
-                    if (line.count('-') == 0): return 'Tie'
+                if (col <= 3 and line >= 3):
+                    if (self.getPos(line, col) == self.getPos(line - 1, col + 1) == self.getPos(line - 2, col + 2) == self.getPos(line - 3, col + 3) and self.getPos(line, col) != '-'):
+                        return self.getPos(line, col)
         return False
