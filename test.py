@@ -3,7 +3,7 @@ import time
 from board import Board
 from astar import Astar
 from connectFour import winnerAi
-from monteCarlo import MCTS, Node, MCTS2, Node2
+from monteCarlo import MCTS, Node
 from randomGame import randomGame
 
 def test_game(board: Board):
@@ -43,4 +43,3 @@ def test_game(board: Board):
     print('csqrt2: ' + str(csqrt2))
                 
         
-test_game(Board('X'))

@@ -5,11 +5,11 @@ import random
 import time
 
 class Node:
-    def __init__(self , state) -> None:
+    def __init__(self , state, c=sqrt(2)) -> None:
         self.state = state
         self.parent = None
         self.children = []
-        self.c = sqrt(2)
+        self.c = c
         self.visits = 0
         self.wins = 0
     
@@ -75,7 +75,7 @@ class MCTS:
         return random.choice(best_child)
 
     def update_state(self , state:Board) -> None:
-        self.root = Node(state)
+        self.root = Node(state, self.root.c)
         
     def select(self) -> Node:
         node = self.root
@@ -89,7 +89,7 @@ class MCTS:
         for line, col in child_moves:
             child_state = node.state.boardCopy()
             child_state.setPos(line, col)
-            node.add_child(Node(child_state))
+            node.add_child(Node(child_state, self.root.c))
         return random.choice(node.children)
         
     def rollout(self , node:Node) -> str:
