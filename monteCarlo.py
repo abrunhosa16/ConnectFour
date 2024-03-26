@@ -126,6 +126,13 @@ class MCTS:
         return self.biggest_win_probability()
 
 def gameMonteCarlo(board:Board , order:list) -> None:
+    while True: 
+        try:
+            time = float(input('Qual o tempo de pesquisa queres? '))
+        except ValueError:
+            print('Tente inteiros entre 1 e 10. \n')
+            continue
+        break
     print(board)
     m = MCTS(Node(board))
     while True:
@@ -137,7 +144,7 @@ def gameMonteCarlo(board:Board , order:list) -> None:
         if winnerAi(board, order):
             return
         
-        board = m.search(10).state
+        board = m.search(time).state
         print(board)
         
         if winnerAi(board, order):
