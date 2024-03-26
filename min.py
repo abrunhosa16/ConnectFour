@@ -46,7 +46,7 @@ def bestMove(board:Board , depth:int , alpha, beta, maximizing:bool , order:list
     terminal_node = isinstance(board.finished(), str)
 
     if depth == 0 or terminal_node:
-        return None, heuristica(board, order[1])
+        return None, heuristica(board, [order[1],order[0]])
 
     if maximizing:
         max_value = float('-inf')
